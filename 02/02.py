@@ -1,5 +1,3 @@
-turvallisia = 0
-
 def turvallinen(suunta: str, eka: int, toka: int) -> bool:
     if suunta == "ylos":
         return 3 >= toka - eka >= 1
@@ -8,40 +6,29 @@ def turvallinen(suunta: str, eka: int, toka: int) -> bool:
     else:
         raise ValueError
 
-def rullaa(raportti: list, suunta: str) -> bool:
-    for i in range(len(raportti) -1):
-        if turvallinen(suunta, raportti[i], raportti[i+1]):
-            continue
-        elif suoja:
-            suoja = False
-            if rullaa(raportti[:i] + raportti[i+1:], suunta, suoja):
-                return True
-            elif rullaa(raportti[:i+1] + raportti[i+2:], suunta, suoja):
-                return True
-        else:
-            return False
+def rullaa(suunta: str, raportti: list) -> tuple[bool, int]:
+    for i in range(len(raportti) - 1):
+        if not turvallinen(suunta, raportti[i], raportti[i+1]):
+            return (False, i)
     else:
-        return True
+        return (True, 0)
 
+turvallisia = 0
 
-
-with open("alku.txt") as f:
+with open("input.txt") as f:
     for r in f:
         raportti = [int(luku) for luku in r.strip().split()]
-        suoja = True
-        
+        meni = False
         for suunta in ["ylos", "alas"]:
-            suoja = True
-            if rullaa(raportti, suunta, suoja):
+            meni, virhekohta = rullaa(suunta, raportti)
+            if meni:
                 turvallisia += 1
                 break
-            else:
-                if not suoja:
-                    break
-                else:
-                    suoja = False
-            
-            
+            elif rullaa(suunta, raportti[:virhekohta] + raportti [virhekohta+1:])[0]:
+                turvallisia += 1
+                break
+            elif rullaa(suunta, raportti[:virhekohta+1] + raportti [virhekohta+2:])[0]:
+                turvallisia += 1
+                break
 
 print(turvallisia)
-
