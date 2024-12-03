@@ -4,18 +4,17 @@ with open("input.txt") as f:
     datarivit = f.readlines()
     data = "".join(datarivit)
 
-data_siistitty = re.sub(r"don\'t\(\).*?do\(\)", "", data, flags=re.DOTALL)
+data_siistitty = re.sub("(?s)don't\(\).*?do\(\)", "", data)
 # Kopioitu: instruction = re.sub(r"don't\(\).*?($|do\(\))", '', instruction, flags=re.DOTALL)
 
-laskut = re.findall(r"mul\(\d{1,3}\,\d{1,3}\)", data_siistitty)
-
+laskut = re.findall("mul\(\d{1,3}\,\d{1,3}\)", data_siistitty)
 summa = 0
 
 for lasku in laskut:
     kerrottavat = [int(luku) for luku in re.findall("\d{1,3}", lasku)]
     summa += kerrottavat[0] * kerrottavat[1]
 
-print(data_siistitty)
+# print(data_siistitty)
 print(summa)
 
 
