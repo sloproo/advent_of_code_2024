@@ -1,4 +1,4 @@
-Kätketyt kertolaskut
+# Kätketyt kertolaskut
 
 Tänään ollaan sit pulkkavuokraamossa, josta sieltäkään ei löydy historioitsijatonttua. Mutta rikkinäinen tietokone löytyy, ja se antaa merkkisekasotkua jossa on seassa mul(123,456) -muotoisia kertolaskuja. Tehtävänä oli ekassa vaiheessa vaan etsiä kaikki tuollaiset, kertoa lukuparin numerot keskenään ja vastaus oli kaikkien tulojen summa.
 
