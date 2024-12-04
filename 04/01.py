@@ -1,35 +1,22 @@
-import time
-
-def naapurit(x: int, y: int, ruudukko: list) -> list:
-    palautettavat = []
-    korkeus = len(ruudukko)
-    leveys = len(ruudukko[0])
-    for y_koord in range(y-1, y+2):
-        if y_koord < 0 or y_koord >= korkeus:
-            continue
-        else:
-            for x_koord in range(x-1, x+2):
-                if x_koord < 0 or x_koord >= leveys:
-                    continue
-                else:
-                    if not (x_koord == x and y_koord == y):
-                        palautettavat.append((x_koord, y_koord))
-    return palautettavat
-
-def etsi_naapurista(x: int, y: int, ruudukko: list, sana: str) -> int:
-    loytyneita = 0
-    naapuriruudut = naapurit(x, y, ruudukko)
-    for x1, y1 in naapuriruudut:
-        # print(f"Lähdetään {x}, {y}:stä liikkeelle, etsitään naapuriruudusta x = {x1}, y = {y1} seuraavaa kirjainta rimpsusta {sana}")
-        if ruudukko[y1][x1] == sana[1]:
-            if len(sana) == 2:
-                # print("Löytyi koko sana")
-                loytyneita += 1
-            else:
-                loytyneita += etsi_naapurista(x1, y1, ruudukko, sana[1:])
-    # print(f"Palautetaan löytyneet joita oli {loytyneita}")
-    return loytyneita
+import itertools
             
+def sisalla(x: int, y: int, ruudukko: list) ->bool:
+    if x < 0 or y < 0 or y >= len(ruudukko) or x >= len(ruudukko[y]):
+        return False
+    return True
+
+def etsi(x: int, y: int, dx: int, dy: int, sana: str, ruudukko: list):
+    if not (sisalla(x+dx, y+dy, ruudukko)):
+        return 0
+    if ruudukko[y+dy][x+dx] == sana[1]:
+        if len(sana) == 2:
+            print(f"Löytyi, päätepiste {x+dx}, {y+dy}, suunta {dx}, {dy}")
+            return 1
+        else:
+            return etsi(x+dx, y+dy, dx, dy, sana[1:], ruudukko)
+    else:
+        return 0
+
 ruudukko = []
 with open("alku.txt") as f:
     for r in f:
@@ -39,13 +26,14 @@ with open("alku.txt") as f:
 
 sana = "XMAS"
 sanoja_loytynyt = 0 
-for y in range(len(ruudukko)):
-    for x in range(len(ruudukko[y])):
+
+for y in range(len(ruudukko) - 1):
+    for x in range(len(ruudukko[y]) - 1):
         if ruudukko[y][x] == sana[0]:
-            print(f"Ruudussa {x}, {y} on kirjain X, lähdetään siitä eteenpäin etsimään")
-            uusia_osumia = etsi_naapurista(x, y, ruudukko, sana)
-            print(f"Uusia osumia löytyi {uusia_osumia}")
-            sanoja_loytynyt += uusia_osumia
-            print(f"Tähän mennessä sanoja löytynyt {sanoja_loytynyt}")
+            suunnat = [pari for pari in itertools.product([-1, 0, 1], repeat=2)]
+            suunnat.remove((0,0))
+            for dx, dy in suunnat:
+                sanoja_loytynyt += etsi(x, y, dx, dy, sana, ruudukko)
             
+
 print(sanoja_loytynyt)
