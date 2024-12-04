@@ -1,51 +1,49 @@
-# Tää taitaa olla oikeasti kakkososan ratkaisu
+import itertools
 
-import time
+def sisalla(x: int, y: int, ruudukko: list) ->bool:
+    if x < 0 or y < 0 or y >= len(ruudukko) or x >= len(ruudukko[y]):
+        return False
+    return True
 
-def naapurit(x: int, y: int, ruudukko: list) -> list:
-    palautettavat = []
-    korkeus = len(ruudukko)
-    leveys = len(ruudukko[0])
-    for y_koord in range(y-1, y+2):
-        if y_koord < 0 or y_koord >= korkeus:
-            continue
-        else:
-            for x_koord in range(x-1, x+2):
-                if x_koord < 0 or x_koord >= leveys:
-                    continue
-                else:
-                    if not (x_koord == x and y_koord == y):
-                        palautettavat.append((x_koord, y_koord))
-    return palautettavat
+def lue(tiedosto: str) -> list:
+    palautettava =[]
+    with open(tiedosto) as f:
+        for r in f:
+            rivi = [kirjain for kirjaimet in r.strip().split() for kirjain in kirjaimet]
+            palautettava.append(rivi)
+    return palautettava
 
-def etsi_naapurista(x: int, y: int, ruudukko: list, sana: str) -> int:
-    loytyneita = 0
-    naapuriruudut = naapurit(x, y, ruudukko)
-    for x1, y1 in naapuriruudut:
-        print(f"Lähdetään {x}, {y}:stä liikkeelle, etsitään naapuriruudusta x = {x1}, y = {y1} seuraavaa kirjainta rimpsusta {sana}")
-        if len(sana) == 1:
-            return 1
-        if ruudukko[y1][x1] == sana[1]:
-            loytyneita += etsi_naapurista(x1, y1, ruudukko, sana[1:])
-    # print(f"Palautetaan löytyneet joita oli {loytyneita}")
-    return loytyneita
+def onko_risti(x: int, y: int, ruudukko: list) -> bool:
+    kirjaimet = ["M", "S"]
+    for x2, y2 in [pari for pari in itertools.product([-1, 1], repeat=2)]:
+        if not sisalla(x + x2, y + y2, ruudukko):
+            return False
+    if ruudukko[y-1][x-1] == ruudukko[y-1][x+1] and ruudukko[y-1][x-1] in kirjaimet:
+        kirjaimet.remove(ruudukko[y-1][x-1])
+        if ruudukko[y+1][x-1] == ruudukko[y+1][x+1] and ruudukko[y+1][x-1] in kirjaimet:
+            return True
+    elif ruudukko[y-1][x-1] == ruudukko[y+1][x-1] and ruudukko[y-1][x-1] in kirjaimet:
+        kirjaimet.remove(ruudukko[y-1][x-1])
+        if ruudukko[y-1][x+1] == ruudukko[y+1][x+1] and ruudukko[y-1][x+1] in kirjaimet:
+            return True
+    elif ruudukko[y-1][x-1] == ruudukko[y-1][x+1] and ruudukko[y-1][x-1] in kirjaimet:
+        kirjaimet.remove(ruudukko[y-1][x-1])
+        if ruudukko[y+1][x-1] == ruudukko[y+1][x+1] and ruudukko[y+1][x-1] in kirjaimet:
+            return True
+    else:
+        return False
             
-ruudukko = []
-with open("alku.txt") as f:
-    for r in f:
-        rivi = [kirjain for kirjaimet in r.strip().split() for kirjain in kirjaimet]
-        print(rivi)
-        ruudukko.append(rivi)
+ruudukko = lue("input.txt")
 
-sana = "XMAS"
-sanoja_loytynyt = 0 
+risteja_loytynyt = 0 
 for y in range(len(ruudukko)):
     for x in range(len(ruudukko[y])):
-        if ruudukko[y][x] == sana[0]:
-            print(f"Ruudussa {x}, {y} on kirjain {sana[0]}, lähdetään siitä eteenpäin etsimään")
-            uusia_osumia = etsi_naapurista(x, y, ruudukko, sana)
-            print(f"Uusia osumia löytyi {uusia_osumia}")
-            sanoja_loytynyt += uusia_osumia
-            print(f"Tähän mennessä sanoja löytynyt {sanoja_loytynyt}")
+        if ruudukko[y][x] == "A":
+            print(f"Ruudussa {x}, {y} on kirjain A, lähdetään siitä eteenpäin etsimään")
+                        
+            if onko_risti(x, y, ruudukko):
+                risteja_loytynyt += 1
+                print(f"Uusi osuma löytyi, X:n keskipiste {x}, {y}")
+            print(f"Tähän mennessä sanoja löytynyt {risteja_loytynyt}")
             
-print(sanoja_loytynyt)
+print(risteja_loytynyt)
