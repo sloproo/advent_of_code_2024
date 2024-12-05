@@ -14,18 +14,37 @@ def avaa(tiedosto) -> tuple[list, list]:
 
     return (parit, manuaalit)
 
-parit, manuaalit = avaa("input.txt")
-
-keskimmaiset = 0
-for manuaali in manuaalit:
+def kelpaako(manuaali: list, parit: list) -> bool:
     for pari in parit:
         if pari[0] in manuaali and pari[1] in manuaali:
             if manuaali.index(pari[0]) < manuaali.index(pari[1]):
                 continue
             else:
-                break
+                return False
     else:
-        keskimmaiset += manuaali[len(manuaali) // 2]
+        return True
 
-print(keskimmaiset)
+def vaihda(eka: int, toka: int, manuaali: list) -> list:
+    manuaali[eka], manuaali[toka] = manuaali[toka], manuaali[eka]
+    return manuaali
 
+parit, manuaalit = avaa("input.txt")
+vaarat = []
+korjatut = []
+for manuaali in manuaalit:
+    if not kelpaako(manuaali, parit):
+        vaarat.append(manuaali)
+
+for manuaali in vaarat:
+    while not kelpaako(manuaali, parit):
+        for pari in parit:
+            if pari[0] in manuaali and pari[1] in manuaali:
+                if manuaali.index(pari[0]) > manuaali.index(pari[1]):
+                    vaihda(manuaali.index(pari[0]), manuaali.index(pari[1]), manuaali)
+    korjatut.append(manuaali)
+
+korjattujen_keskikohtien_summa = 0
+for manuaali in korjatut:
+    korjattujen_keskikohtien_summa += manuaali[len(manuaali) // 2]
+
+print(korjattujen_keskikohtien_summa)

@@ -14,7 +14,7 @@ def avaa(tiedosto) -> tuple[list, list]:
 
     return (parit, manuaalit)
 
-parit, manuaalit = avaa("input.txt")
+parit, manuaalit = avaa("alku.txt")
 
 keskimmaiset = 0
 for manuaali in manuaalit:
@@ -28,4 +28,5 @@ for manuaali in manuaalit:
         keskimmaiset += manuaali[len(manuaali) // 2]
 
 print(keskimmaiset)
+
 
