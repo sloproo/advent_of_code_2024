@@ -42,7 +42,6 @@ def kierto(tiedosto: str) -> list:
     ukko = etsi_ukko(kartta)
     kartta[ukko[1]][ukko[0]] = "."
     kaydyt = set()
-
     while ukko != (-1, -1):
         kaydyt.add(ukko)
         ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
