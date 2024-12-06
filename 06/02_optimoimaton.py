@@ -1,8 +1,6 @@
 import copy
 import time
 
-alkuaika = time.time()
-
 def avaa(tiedosto: str) -> list:
     kartta = []
     with open(tiedosto) as f:
@@ -36,44 +34,26 @@ def liiku(x: int, y: int, suunta: str, kartta: list) -> tuple[tuple[int, int], s
     else:
         raise ValueError("Nyt meni vituix kun liikkuessa ei vastaan tullut reuna, . tai #")
 
-def kierto(tiedosto: str) -> list:
-    kartta = avaa(tiedosto)
-    suunta = "U"
-    ukko = etsi_ukko(kartta)
-    kartta[ukko[1]][ukko[0]] = "."
-    kaydyt = set()
-
-    while ukko != (-1, -1):
-        kaydyt.add(ukko)
-        ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
-    return list(kaydyt)
-
 avattava = "input.txt"
 og_kartta = avaa(avattava)
-og_kierto = kierto(avattava)
-og_ukko = etsi_ukko(og_kartta)
 luuppeja = 0
 
-for x, y in og_kierto:
-    if og_kartta[y][x] != ".":
-        continue
-    og_kartta[y][x] = "#"
-    suunta = "U"
-    ukko = og_ukko
-    og_kartta[ukko[1]][ukko[0]] = "."
-    kaydyt = set()
+for y in range(len(og_kartta)):
+    for x in range(len(og_kartta[y])):
+        if og_kartta[y][x] != ".":
+            continue
+        kartta = copy.deepcopy(og_kartta)
+        kartta[y][x] = "#"
+        suunta = "U"
+        ukko = etsi_ukko(kartta)
+        kartta[ukko[1]][ukko[0]] = "."
+        kaydyt = set()
 
-    while ukko != (-1, -1):
-        kaydyt.add((ukko, suunta))
-        ukko, suunta = liiku(ukko[0], ukko[1], suunta, og_kartta)
-        if (ukko, suunta) in kaydyt:
-            luuppeja += 1
-            og_kartta[og_ukko[1]][og_ukko[0]] = "^"
-            og_kartta[y][x] = "."
-            break
-    og_kartta[og_ukko[1]][og_ukko[0]] = "^"
-    og_kartta[y][x] = "."
+        while ukko != (-1, -1):
+            kaydyt.add((ukko, suunta))
+            ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
+            if (ukko, suunta) in kaydyt:
+                luuppeja += 1
+                break
 
 print(luuppeja)
-print(f"Loppuaika = {time.time() - alkuaika} s")
-
