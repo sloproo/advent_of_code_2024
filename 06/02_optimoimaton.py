@@ -1,6 +1,8 @@
 import copy
 import time
 
+alkuaika = time.time()
+
 def avaa(tiedosto: str) -> list:
     kartta = []
     with open(tiedosto) as f:
@@ -42,7 +44,7 @@ for y in range(len(og_kartta)):
     for x in range(len(og_kartta[y])):
         if og_kartta[y][x] != ".":
             continue
-        kartta = copy.deepcopy(og_kartta)
+        kartta = avaa(avattava)
         kartta[y][x] = "#"
         suunta = "U"
         ukko = etsi_ukko(kartta)
@@ -57,3 +59,4 @@ for y in range(len(og_kartta)):
                 break
 
 print(luuppeja)
+print(f"Loppuaika = {time.time() - alkuaika} s")
