@@ -30,19 +30,42 @@ def liiku(x: int, y: int, suunta: str, kartta: list) -> tuple[tuple[int, int], s
         return ((x, y), suunta)
     else:
         raise ValueError("Nyt meni vituix kun liikkuessa ei vastaan tullut reuna, . tai #")
+
+def kierto(tiedosto: str) -> list:
+    kartta = avaa(tiedosto)
+    suunta = "U"
+    ukko = etsi_ukko(kartta)
+    kartta[ukko[1]][ukko[0]] = "."
+    kaydyt = set()
+
+    while ukko != (-1, -1):
+        kaydyt.add(ukko)
+        ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
     
-kartta = avaa("input.txt")
+    print(list(kaydyt))
+    return list(kaydyt)
 
-suunta = "U"
-ukko = etsi_ukko(kartta)
-print(ukko)
-print()
-kartta[ukko[1]][ukko[0]] = "."
-kaydyt = set()
+avattava = "input.txt"
+og_kartta = avaa(avattava)
+og_kierto = kierto(avattava)
+print(og_kierto)
+luuppeja = 0
 
-while ukko != (-1, -1):
-    kaydyt.add(ukko)
-    ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
-    print(ukko)
+for x, y in og_kierto:
+    if og_kartta[y][x] != ".":
+        continue
+    kartta = avaa(avattava)
+    kartta[y][x] = "#"
+    suunta = "U"
+    ukko = etsi_ukko(kartta)
+    kartta[ukko[1]][ukko[0]] = "."
+    kaydyt = set()
 
-print(len(kaydyt))
+    while ukko != (-1, -1):
+        kaydyt.add((ukko, suunta))
+        ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
+        if (ukko, suunta) in kaydyt:
+            luuppeja += 1
+            break
+
+print(luuppeja)
