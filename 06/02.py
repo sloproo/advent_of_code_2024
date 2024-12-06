@@ -41,8 +41,6 @@ def kierto(tiedosto: str) -> list:
     while ukko != (-1, -1):
         kaydyt.add(ukko)
         ukko, suunta = liiku(ukko[0], ukko[1], suunta, kartta)
-    
-    print(list(kaydyt))
     return list(kaydyt)
 
 avattava = "input.txt"
