@@ -6,7 +6,16 @@ def viimeinen(lista: list) -> int:
     for i in range(len(lista) -1, -1, -1):
         if lista[i] != ".":
             return i
-    
+        
+def tarkistussumma(lista: list) -> int:
+    palautettava = 0
+    for i in range(len(lista)):
+        if lista[i] == ".":
+            break
+        palautettava += i * lista[i]
+    return palautettava
+
+
 levy = lue("input.txt")
 
 sekaisin = []
@@ -27,7 +36,6 @@ for i in range(len(sekaisin)):
         for _ in range(tyhjia[i]):
             levykuva.append(".")
 
-# print(sotkukuva)
 # for m in sotkukuva:
 #     print(m, end="")
 
@@ -42,10 +50,4 @@ for i in range(len(levykuva)):
 
 # print(levykuva)
 
-tarkistussumma = 0
-for i in range(len(levykuva)):
-    if levykuva[i] == ".":
-        break
-    tarkistussumma += i * levykuva[i]
-
-print(tarkistussumma)
+print(tarkistussumma(levykuva))
