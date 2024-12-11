@@ -13,5 +13,5 @@ Eka ajatus oli, että koska jotain luuppaavuutta tuossa kuitenkin tapahtuu (joka
 
 Mut jotenkin mielessä kummitteli vuoden 2021 tehtävä, jossa syvänmerenkalat syntyivät, kypsyivät ja alkoivat lisääntyä. Siinäkään ei kone kestänyt, jos joka kalaa olisi laskenut erikseen, mutta pitämällä kirjaa siitä, kuinka paljon minkäkinikäisiä kaloja oli, numerot pysyivät kontrollissa. Sama tässäkin: Unohtaa kivien järjestyksen ja päivittää aina silmänräpäysten välillä vain sen, että kuinka monta kappaletta minkäkinnumeroista kiveä jonossa on ja kuinka monta minkäkinnumeroista kiveä siitä tulee seuraavaksi. Jonon järjestyksestä ei ole siinä enää mitään tietoa, mutta ei ole väliäkään.
 
-Vastaus oli nopea ja meni läpi ygösellä. Höllii!
+Ratkaisukoodi oli nopea ja meni läpi ygösellä. Höllii!
 
