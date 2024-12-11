@@ -31,13 +31,9 @@ def kierros(kivet: list) -> list:
             seuraava.append(jama(kivi))
     return seuraava
 
-    
-
-
-
 kivet = avaa("input.txt")
 print(kivet)
-for i in range(25):
+for i in range(75):
     kivet = kierros(kivet)
-    print(len(kivet))
-    
+    print(f"Se oli kierros {i+1}")
+    print(f"Kiviä on yhteensä: {len(kivet)}\n")
