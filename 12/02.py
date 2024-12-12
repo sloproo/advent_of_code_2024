@@ -7,3 +7,5 @@ def avaa(tiedosto: str) -> list:
 
 kartta = avaa("alku.txt")
 print(kartta)
+
+
