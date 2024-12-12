@@ -38,6 +38,6 @@ for x, y in nollat:
         nykyiset = seuraavat.copy()
     reitteja += len(seuraavat)
 
-
+print("paska")
 print(reitteja)
 
