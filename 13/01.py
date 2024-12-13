@@ -17,12 +17,12 @@ def ratkaise(yhtalopari: tuple) -> tuple[int, int]:
     erotus = (ekax[0] - tokax[0], ekax[1] - tokax[1], ekax[2] - tokax[2])
     assert erotus[0] == 0
     if erotus[2] % erotus[1] != 0:
-        print("ei ratkea tasan")
+        # print("ei ratkea tasan")
         return (0, 0)
     else:
         b = erotus[2] // erotus[1]
         if (eka[2] - eka[1] * b) % eka[0] != 0:
-            print("Ei ratkea tasan")
+            # print("Ei ratkea tasan")
             return (0, 0)
         else:
             return((eka[2] - eka[1] * b) // eka[0], b)
