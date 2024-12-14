@@ -35,8 +35,8 @@ def sijoittele(paikat: list, leveys: int, korkeus: int) -> list:
             paikka[1] in range(kvadrantit[k][2], kvadrantit[k][3]):
                 maarat[k] += 1
                 break
-        else:
-            print("Robotille ei löytynyt sijoituspaikkaa :o")
+        # else:
+            # print("Robotille ei löytynyt sijoituspaikkaa :o")
     return maarat
 
 def visualisoi(paikat: list, leveys:int, korkeus: int):
@@ -47,19 +47,29 @@ def visualisoi(paikat: list, leveys:int, korkeus: int):
     tulostettava = "\n".join(rivi_strt)
     print(tulostettava)
 
+def laske_turvallisuus(paikat: list, leveys: int, korkeus: int) -> int:
+    maarat = sijoittele(korjatut, leveys, korkeus)
+    turvallisuus = 1
+    for m in maarat.values():
+        turvallisuus *= m
+    return turvallisuus
+
 robotit = lue("input.txt")
 # alussa leveys ja korkeus 11 ja 7, inputissa 101 ja 103
 leveys, korkeus = 101, 103
+max_turvallisuus = 1000000000000000000000000000000
 
 liikkuneet = [liikuta(robotti, 0) for robotti in robotit]
 og_korjatut = [korjaa(liikkunut, leveys, korkeus) for liikkunut in liikkuneet]
 for kierroksia in range(10000):
     liikkuneet = [liikuta(robotti, kierroksia) for robotti in robotit]
     korjatut = [korjaa(liikkunut, leveys, korkeus) for liikkunut in liikkuneet]
-    if len(set(korjatut)) == 500: # Tällainen kikka
+    nyt_turvallisuus = laske_turvallisuus(korjatut,leveys, korkeus) 
+    if nyt_turvallisuus < max_turvallisuus:
+        max_turvallisuus = nyt_turvallisuus
         visualisoi(korjatut, leveys, korkeus)
         print(f"Kierroksia: {kierroksia}")
-        time.sleep(0.75)
+        time.sleep(0.5)
     # input()
 
                                                                                                       
