@@ -1,3 +1,5 @@
+import time
+
 def lue(tiedosto: str) -> list:
     with open(tiedosto) as f:
         robotit = []
@@ -38,15 +40,26 @@ def sijoittele(paikat: list, leveys: int, korkeus: int) -> list:
     return maarat
 
 robotit = lue("input.txt")
-kierroksia = 100
+# alussa leveys ja korkeus 11 ja 7, inputissa 101 ja 103
 leveys, korkeus = 101, 103
 
+liikkuneet = [liikuta(robotti, 0) for robotti in robotit]
+og_korjatut = [korjaa(liikkunut, leveys, korkeus) for liikkunut in liikkuneet]
 
-liikkuneet = [liikuta(robotti, kierroksia) for robotti in robotit]
-korjatut = [korjaa(liikkunut, leveys, korkeus) for liikkunut in liikkuneet]
-maarat = sijoittele(korjatut, leveys, korkeus)
-turvallisuus = 1
-for m in maarat.values():
-    turvallisuus *= m
+for kierroksia in range(136, 10000, 103):
+    liikkuneet = [liikuta(robotti, kierroksia) for robotti in robotit]
+    korjatut = [korjaa(liikkunut, leveys, korkeus) for liikkunut in liikkuneet]
+    kartta = [[" "] * leveys for _ in range(korkeus)]
+    if korjatut == og_korjatut:
+        print(f"Kierroksella: {kierroksia} ollaan lähtöasetelmassa")
+        time.sleep(2)  
+    for x, y in korjatut:
+        kartta[y][x] = "#"
+    rivi_strt = ["".join(r) for r in kartta]
+    tulostettava = "\n".join(rivi_strt)
+    print(tulostettava)
+    print(f"Kierroksia: {kierroksia}")
+    time.sleep(0.33)
+    # input()
 
-print(turvallisuus)
+                                                                                                      

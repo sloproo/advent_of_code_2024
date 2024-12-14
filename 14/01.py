@@ -33,8 +33,8 @@ def sijoittele(paikat: list, leveys: int, korkeus: int) -> list:
             paikka[1] in range(kvadrantit[k][2], kvadrantit[k][3]):
                 maarat[k] += 1
                 break
-        else:
-            print("Robotille ei löytynyt sijoituspaikkaa :o")
+        # else:
+        #     print("Robotille ei löytynyt sijoituspaikkaa :o")
     return maarat
 
 robotit = lue("input.txt")
