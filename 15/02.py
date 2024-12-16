@@ -96,7 +96,7 @@ pass
 for suunta in kaskyt:
     robotti, vasemmat, oikeat = liiku(suunta, robotti, seinat, vasemmat, oikeat)
     # piirra(robotti, seinat, vasemmat, oikeat)
-    print()
+    # print()
 
 
 gps_summa = 0
