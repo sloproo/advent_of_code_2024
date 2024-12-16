@@ -1,6 +1,3 @@
-import time
-
-
 def lue(tiedosto: str) -> list:
     kartta = []
     with open(tiedosto) as f:

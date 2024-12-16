@@ -1,6 +1,3 @@
-import time
-
-
 def lue(tiedosto: str) -> list:
     kartta = []
     with open(tiedosto) as f:
@@ -32,6 +29,7 @@ def eteenpain(tila: tuple, kartta: list) -> tuple[tuple[int, int], str, int]:
     if vastassa[1] == ".":
         return (vastassa[0], suunta, askeleet + 1)
     elif vastassa[1] == "#":
+        input("Mennään eteenpäin, seinään törmäämisen olisi kai pitänyt olla estetty aiemmin. Virhe?")
         return ((-1, -1), suunta, -1)
     else:
         raise AssertionError("Nyt tuli kartalla jotain outoa vastaan")
@@ -54,42 +52,71 @@ def piirra(kartta: list, kaydyt: set):
         tulostettava += "".join(r) + "\n"
     print(tulostettava)
 
-kartta = lue("alku.txt")
+def meneeko_mahdollisiin(tila: tuple[tuple[int, int], str, int], kaydyt: list) -> bool:
+    samat_kaydyissa = [kayty for kayty in kaydyt if kayty[:2] == tila[:2]]
+    if len(samat_kaydyissa) == 0:
+        # input("Ei ole vielä käydyissä, voi lisätä")
+        return True
+    # assert len(samat_kaydyissa) <= 1
+    assert tila[2] >= samat_kaydyissa[0][2]
+    if tila[2] == samat_kaydyissa[0][2]:
+        input("Löytyi vaihtoehtoinen reitti jo tultuun tilaan, voi lisätä")
+        return True
+    else:
+        # input("Joo tänne ollaan tultu mutta nopeammin, ei voi lisätä")
+        return False
 
-for y in range(len(kartta)):
-    for x in range(len(kartta[y])):
-        if kartta[y][x] == "E" or kartta[y][x] == "S":
-            if kartta[y][x] == "E":
-                maali = (x, y)
-                kartta[y][x] = "."
-            elif kartta[y][x] == "S":
-                alku = (x, y)
-                kartta[y][x] = "."
+def alusta_kartta(kartta: list) -> tuple[list, tuple, tuple]:
+    for y in range(len(kartta)):
+        for x in range(len(kartta[y])):
+            if kartta[y][x] == "E" or kartta[y][x] == "S":
+                if kartta[y][x] == "E":
+                    maali = (x, y)
+                    kartta[y][x] = "."
+                elif kartta[y][x] == "S":
+                    alku = (x, y)
+                    kartta[y][x] = "."
+    return (kartta, alku, maali)
 
-mahdolliset = [(alku, "E", 0)]
+kartta = lue("input.txt")
+kartta, alku, maali = alusta_kartta(kartta)
+
+mahdolliset = [(alku, "E", 0, (-1, -1), "E")]
 kaydyt = set()
+maaliin_paasty = False
 
-while maali not in [tila[0] for tila in mahdolliset]:
+while True:
+    hyodyllinen = False
     seuraavat_mahdolliset = []
     tutkittava = mahdolliset[0]
-    edessa_oleva = edessa(tutkittava[0], tutkittava[1], kartta)
-    if edessa_oleva[1] == ".":
-        if (edessa_oleva[0], tutkittava[1]) not in kaydyt:
-            seuraavat_mahdolliset.append(eteenpain(tutkittava, kartta))
-
-    kaannytyt_mahdolliset = kaanny(tutkittava, kartta)
+    edessa_oleva_ruutu = edessa(tutkittava[0], tutkittava[1], kartta)
+    if edessa_oleva_ruutu[1] == ".":
+        tila_edessa = eteenpain(tutkittava[:3], kartta)
+        if meneeko_mahdollisiin(tila_edessa, kaydyt):
+            seuraavat_mahdolliset.append(tuple(list(tila_edessa) + [tutkittava[0]] + [tutkittava[1]]))
+            hyodyllinen = True
+    kaannytyt_mahdolliset = kaanny(tutkittava[:3], kartta)
     for kaannytty in kaannytyt_mahdolliset:
-        if kaannytty[:2] not in kaydyt:
-            seuraavat_mahdolliset.append(kaannytty)
-    kaydyt.add(tutkittava[:2])
+        if meneeko_mahdollisiin(kaannytty, kaydyt):
+            seuraavat_mahdolliset.append(tuple(list(kaannytty) + [tutkittava[0]] + [tutkittava[1]]))
+            hyodyllinen = True
+    if hyodyllinen:
+        kaydyt.add(tutkittava)
+    for s_m in seuraavat_mahdolliset:
+        if s_m not in mahdolliset:
+            mahdolliset.append(s_m)
     mahdolliset.pop(0)
-    mahdolliset += seuraavat_mahdolliset
-    mahdolliset.sort(key=lambda tila: tila[2])
+    mahdolliset.sort(key=lambda mahdollinen: mahdollinen[2])
     # print("\x1b[2J\033[H")
     # piirra(kartta, kaydyt)
     # print(f"Askeleita edenneessä = {tutkittava[2]}")
     # time.sleep(0.2)
     pass
+
+    if maali in [tila[0] for tila in mahdolliset]: 
+        maaliin_paasty = True
+        print("Jee jee")
+        pass
 
 
 print(f"Maali on {maali}")
