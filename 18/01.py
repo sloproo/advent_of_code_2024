@@ -43,6 +43,7 @@ class Kartta:
     def mene_maaliin(self):
         self.alusta()
         while self.maali not in self.kaydyt:
+            
             self.kay_kierros()
         print(f"Maalissa {self.maali} ollaan ajassa {self.kaydyt[self.maali]}")
         
