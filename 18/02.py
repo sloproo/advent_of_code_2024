@@ -63,7 +63,7 @@ for i in range(len(kartta.bitit) -1, -1, -1):
         print(f"Maaliin ei päästy, i oli {i}")
     else:
         print(f"Nyt päästiin maaaliin, mutta seuraava kivi, joka katkaisi\n" +
-              f"tien ja kamelin selän, on {kartta.bitit[i]}")
+              f"tien ja kamelin selän, on {kartta.bitit[i][0]},{kartta.bitit[i][1]}")
         break
 
 

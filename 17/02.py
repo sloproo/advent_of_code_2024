@@ -14,11 +14,12 @@ class Tietokone:
                            4: self.nelja, 5: self.viisi, 6: self.kuusi, 7: self.seitseman}
             self.lukupaa = 0
             self.palaute = []
-            self.kasvava = 8 ** 16 -200000
+            self.kasvava = 0
 
     def etsi_itsen_synnyttaja(self):
         while self.palaute != self.ohjelma:
             self.nollaa()
+            print(f"a = {self.a}")
             self.aja_ohjelma()
             # if len(self.palaute) < len(self.ohjelma):
             #     print(f"Vielä ollaan pienissä. a oli 8 ** {self.kasvava}")
@@ -29,17 +30,16 @@ class Tietokone:
         
             # print(f"nyt aletaan lähestyä: \n{self.palaute} ei ole enää lyhyempi kuin ohjelma a:n arvolla\n" +
             #         f"{self.ohjelma}\n {self.kasvava} oli kasvava")
-            if self.kasvava % 100000 == 0:
-                print(f"{self.kasvava} on jo näin isoksi kasvanut\n"+
-                      f"Sillä ollaan palautteessa {self.palaute}")
-            self.kasvava -= 1
+            # if self.kasvava % 100000 == 0:
+            print(f"Sillä ollaan palautteessa {self.palaute}")
+            self.kasvava += 1
             
                 # time.sleep(5)
             # print(f"a:n arvolla {self.kasvava} palaute oli {self.palaute}")
             # time.sleep(0.1)
             # print(f"Kasvava on kasvanut lukuun {self.kasvava}")
 
-        print(f"Sit löytyi. Kasvava = {self.kasvava}")
+        print(f"Sit löytyi. Kasvava = {self.kasvava - 1}")
         print(f"Kesti {time.time() - alkuaika}")
 
     
@@ -130,7 +130,7 @@ class Tietokone:
         print(kak)
         return kak
 
-tiedosto = "input.txt"
+tiedosto = "alku2.txt"
 kompu = Tietokone(tiedosto)
 kompu.etsi_itsen_synnyttaja()
 
