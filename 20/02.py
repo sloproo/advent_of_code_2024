@@ -50,53 +50,12 @@ class Sokkelo:
                 if self.sisalto(seur) == "." and seur not in self.matkat_alusta:
                     self.matkat_alusta[seur] = i
                     i += 1
-
-    def etene_seinissa(self, og_lahtopiste: tuple[int, int], 
-                       nyt_lahtopiste: tuple[int, int], nyt_tulopiste: tuple[int, int],
-                       ask_otettu: int, etaisyydet_lahtopisteesta: dict) -> dict:
-        y, x = nyt_tulopiste
-        if ask_otettu > 20:
-            return {}
-        etaisyydet_lahtopisteesta[nyt_tulopiste] = (ask_otettu, self.sisalto(nyt_tulopiste))
-        if self.sisalto(nyt_tulopiste) == "." and ask_otettu == 1:
-                return {}
-        if self.sisalto(nyt_tulopiste) == ".":
-                return etaisyydet_lahtopisteesta
-        # kasvatettava = len(etaisyydet_lahtopisteesta)
-        for naapuri in [n for n in self.naapurit(nyt_tulopiste)
-                        if n not in etaisyydet_lahtopisteesta]:
-            etaisyydet_lahtopisteesta.update(self.etene_seinissa(
-                og_lahtopiste, nyt_tulopiste, naapuri, ask_otettu + 1,
-                etaisyydet_lahtopisteesta))
-        # if len(etaisyydet_lahtopisteesta) == kasvatettava:
-        #     return {}
-        # else:
-        return etaisyydet_lahtopisteesta
-
-    def astu_seinaan(self, og_lahtopiste: tuple[int, int]):
-        oikaisut = {}
-        kaydyt = {og_lahtopiste}
-        nykyiset = {n for n in self.naapurit(og_lahtopiste) if self.sisalto(n) == "#"}
-        for i in range(1, 20):
-            tulevat = set()
-            for nykyinen in nykyiset:
-                for tuleva in self.naapurit(nykyinen):
-                    if tuleva != og_lahtopiste and tuleva not in kaydyt \
-                        and tuleva not in oikaisut:
-                        if self.sisalto(tuleva) == "#":
-                            tulevat.add(tuleva)
-                        elif self.sisalto(tuleva) == ".":
-                            oikaisut[tuleva] = i + 1
-                kaydyt.add(nykyinen)
-            nykyiset = tulevat
-        for oikaisu in oikaisut:
-            self.oikaisut[(og_lahtopiste, oikaisu)] = oikaisut[oikaisu]
-
+    
     def lisaa_timanttioikaisut(self, keskikohta: tuple[int, int]):
         x, y = keskikohta
         oikaisut = {}
         for dy in range(0, 21):
-            for dx in range(0, 21 - y):
+            for dx in range(0, 21 - dy):
                 if (dx == 1 and dy == 0) or (dx == 0 and dy == 1):
                     continue
                 if abs(dx) == 1 and abs(dy) == 1:
@@ -134,3 +93,5 @@ print(f"Haluttua säästöä (ainakin {halutut_saastot}) saatiin {saadut_saastot
 
 # 58719 liian matala
 # 73467 liian matala
+# 83615 liian matala
+# 1020507 oikea 
