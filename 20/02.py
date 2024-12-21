@@ -7,14 +7,8 @@ class Sokkelo:
         self.alkupuhdistus()
         self.matkat_alusta = {self.alku: 0}
         self.kartoita_askeleet()
-        self.oikaisut = []
+        self.oikaisut = {}
         self.selvita_huijaukset()
-        
-        self.saastettava = 54
-        
-        self.laske_saastot()
-        print(f"Täsmälleen {self.saastettava} ps nopeampia oikaisuja oli {self.satasen_saastoja}")
-
     
     def alkupuhdistus(self):
         for y in range(len(self.kartta)):
@@ -83,7 +77,7 @@ class Sokkelo:
         oikaisut = {}
         kaydyt = {og_lahtopiste}
         nykyiset = {n for n in self.naapurit(og_lahtopiste) if self.sisalto(n) == "#"}
-        for i in range(1, 19):
+        for i in range(1, 20):
             tulevat = set()
             for nykyinen in nykyiset:
                 for tuleva in self.naapurit(nykyinen):
@@ -95,22 +89,48 @@ class Sokkelo:
                             oikaisut[tuleva] = i + 1
                 kaydyt.add(nykyinen)
             nykyiset = tulevat
-        self.oikaisut += [(og_lahtopiste, oik, oikaisut[oik]) for oik in oikaisut]
+        for oikaisu in oikaisut:
+            self.oikaisut[(og_lahtopiste, oikaisu)] = oikaisut[oikaisu]
 
+    def lisaa_timanttioikaisut(self, keskikohta: tuple[int, int]):
+        x, y = keskikohta
+        oikaisut = {}
+        for dy in range(0, 21):
+            for dx in range(0, 21 - y):
+                if (dx == 1 and dy == 0) or (dx == 0 and dy == 1):
+                    continue
+                if abs(dx) == 1 and abs(dy) == 1:
+                    continue
+                kokeiltavat = [(x - dx, y - dx), (x + dx, y - dy),
+                               (x - dx, y + dy), (x + dx, y + dy)]
+                for kokeiltava in kokeiltavat:
+                    if self.on_sisalla(kokeiltava) and self.on_avoin(kokeiltava):
+                        oikaisut[((keskikohta), (kokeiltava))] = dx + dy
+        self.oikaisut.update(oikaisut)
                      
     def selvita_huijaukset(self):
         for alkupiste in self.matkat_alusta:
-            self.astu_seinaan(alkupiste)
+            self.lisaa_timanttioikaisut(alkupiste)
             
-    def laske_saastot(self):
-        self.satasen_saastoja = 0
-        for oikaisu in self.oikaisut:
-            lahto, tulo, pikamatka = oikaisu
+    def laske_saasto(self, oikaisu: tuple[tuple[int, int], tuple[int, int]]):
+            lahto, tulo = oikaisu[0], oikaisu[1]
+            pikamatka = self.oikaisut[oikaisu]
                 # lahtoon_alusta = self.matkat_alusta[lahto]
             hitaampi = self.matkat_alusta[tulo] - self.matkat_alusta[lahto]
             saasto = hitaampi - pikamatka
-            if saasto == self.saastettava:
-                self.satasen_saastoja += 1
+            return saasto
                 
-sok = Sokkelo("alku.txt")
+sok = Sokkelo("input.txt")
 pass
+
+halutut_saastot = 100
+
+saadut_saastot = 0
+for oikaisu in sok.oikaisut:
+    if sok.laske_saasto(oikaisu) >= halutut_saastot:
+        saadut_saastot += 1
+
+print(f"Haluttua säästöä (ainakin {halutut_saastot}) saatiin {saadut_saastot} kappaletta")
+
+# 58719 liian matala
+# 73467 liian matala
