@@ -101,7 +101,7 @@ class Sokkelo:
                     continue
                 if abs(dx) == 1 and abs(dy) == 1:
                     continue
-                kokeiltavat = [(x - dx, y - dx), (x + dx, y - dy),
+                kokeiltavat = [(x - dx, y - dy), (x + dx, y - dy),
                                (x - dx, y + dy), (x + dx, y + dy)]
                 for kokeiltava in kokeiltavat:
                     if self.on_sisalla(kokeiltava) and self.on_avoin(kokeiltava):
