@@ -1,3 +1,20 @@
+"""
+Elikkäs.
+Ehkä tämän voi tehdä yksinkertaisesti kun tietää mitä tekee.
+funktio sille, että muuttaa näppäimenpainallukset ylemmän tason
+näppäimenpainalluksiksi. Niistä vaihtoehtoiset versiot, putsausfunktio on jo.
+Kattoo niitten pituudet iteroiden ainakin sen ykköstehtävässä vaaditun kaksi
+tasoa ylöspäin ja siinähän se sitten onkin.
+
+Myöhempää varten voi katsoa vaikka just sen kaksi tasoa ylöspäin erilaisille kolmen
+napinpainalluksen yhdistelmällä (10 ^3 ei kai ole paha emt?), jossa erot tulevat
+näkyviin ja siitä ylöspäin varmaan kertaututuvat. Niillä sit pelaa, jos syvyyttä tulee
+kovasti lisää.
+"""
+
+
+import itertools
+
 class Avaruusasema:
     def __init__(self, tiedosto: str):
         with open(tiedosto) as f:
@@ -17,25 +34,10 @@ class Avaruusasema:
                     return (x, y)
         raise AssertionError("Ei löytynyt haettua nappia")
     
-    def napilta_toiselle(self, nappi1, nappi2, nappaimisto: list) -> str:
+    def delta_napilta_toiselle(self, nappi1, nappi2, nappaimisto: list) -> tuple[int, int]:
         x1, y1 = self.napin_paikka(nappi1, nappaimisto)
         x2, y2 = self.napin_paikka(nappi2, nappaimisto)
-        dx = x2 - x1
-        dy = y2 - y1
-        if dx != 0 and abs(dx) / dx < 0:
-            hori = "<" * abs(dx)
-        else:
-            hori = ">" * dx
-        if dy != 0 and abs(dy) / dy < 0:
-            vert = "^" * abs(dy)
-        else:
-            vert = "v" * dy
-        if nappaimisto == self.numeronappis and nappi1 in [7, 4, 1]:
-            return hori+vert
-        elif nappaimisto == self.nuolinappis and nappi1 == "<":
-            return hori+vert
-        else:
-            return vert+hori
+        return (x2 - x1, y2 - y1)
         
     def sarja_suunniksi(self, sarja: str, nappis: list) -> str:
         suunnat = self.napilta_toiselle("A", sarja[0], nappis) + "A"
@@ -45,15 +47,58 @@ class Avaruusasema:
         return suunnat
     
     def pura(self, sarja: str) -> str:
-        eka = self.sarja_suunniksi(self.sarjat[0], self.numeronappis)
-        toka = self.sarja_suunniksi(eka, self.nuolinappis)
-        kolmas = self.sarja_suunniksi(toka, self.nuolinappis)
-        pituus = len(kolmas)
-        sarja_int = int(sarja[:-1])
-        print(f"Kompleksisuus vois olla {pituus} * {sarja_int} = " + 
-              f"{pituus * sarja_int}")
-        self.yht_kompleksisuus += pituus * sarja_int
-
+        sarja = "A" + sarja
+        for i in range(len(sarja) - 1):
+            eka_nappi = sarja[i]
+            toka_nappi = sarja[i+1]
+            napit = ""
+            dx, dy = self.delta_napilta_toiselle(eka_nappi, toka_nappi,
+                                                self.numeronappis)
+            if dx < 0:
+                napit += "<" * abs(dx)
+            else:
+                napit += ">" * dx
+            if dy < 0:
+                napit += "^" * abs(dy)
+            else:
+                napit += "v" * dy
+            print(napit)
+            vaihtoehtolista = list({o for o in itertools.permutations(napit, 3)})
+            vaihtoehtolista = self.putsaa_vaihtoehtolista(vaihtoehtolista, 
+                                                          eka_nappi, self.numeronappis)
+            vaihtoehtolista = [o + ("A",) for o in vaihtoehtolista]
+            pass
+    
+    def syvenna(self, suunnat: list) -> list:
+        pass
+    
+    def koordinaatista_suuntaan(self, koord: tuple[int, int], suunta: str) -> \
+    tuple[int, int]:
+        if suunta == "^":
+            return (koord[0], koord[1] - 1)
+        elif suunta == ">":
+            return (koord[0] + 1, koord[1])
+        elif suunta == "v":
+            return (koord[0], koord[1] + 1)
+        elif suunta =="<":
+            return (koord[0] - 1, koord[1])
+        else:
+            raise AssertionError("Nyt ei ollut kunnon suuntaa. Lipsahtiko A?")
+    
+    def putsaa_vaihtoehtolista(self, vaihtoehtolista: list,
+                               lahtokohta: tuple[int, int], 
+                               nappaimisto: list) -> list:
+        pysyva_lk = lahtokohta
+        palautettavat = []
+        for askelsarja in vaihtoehtolista:
+            lahtokohta = pysyva_lk
+            for askel in askelsarja:
+                lahtokohta = self.koordinaatista_suuntaan(lahtokohta, askel)
+                if nappaimisto[lahtokohta[1]][lahtokohta[0]] == "X":
+                    break
+            else:
+                palautettavat.append(askelsarja)
+        return palautettavat
 
 ase = Avaruusasema("input.txt")
 
