@@ -1,3 +1,5 @@
 class Avaruusasema:
     def __init__(self, tiedosto: str):
-        painettavat = with
+        with open(tiedosto) as f:
+            self.sarjat = [r.strip() for r in f.readlines()]
+        self.
