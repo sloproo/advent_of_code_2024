@@ -5,6 +5,7 @@ class Sokkelo:
             for r in f:
                 self.kartta.append([m for m in r])
         self.alkupuhdistus()
+        self.matkat_alusta = {self.alku: 0}
         self.kartoita_askeleet()
         self.oikaisut = {}
         self.selvita_huijaukset()
@@ -56,13 +57,12 @@ class Sokkelo:
                 [kay[0] for kay in kaydyt] and self.kartta[naap[1]][naap[0]] == "."]
         
     def kartoita_askeleet(self):
-        self.matkat_alusta = {self.alku: 0}
-        kaydyt = [(self.alku, 0)]
-        while self.maali not in [kayty[0] for kayty in kaydyt]:
-            seuraavat = self.seuraavat_ruudut(kaydyt[-1][0], kaydyt)
-            assert len(seuraavat) == 1
-            kaydyt.append((seuraavat[0], kaydyt[-1][1] +1))
-            self.matkat_alusta[seuraavat[0]] = kaydyt[-1][1] +1
+        i = 1
+        while self.maali not in self.matkat_alusta:
+            for seur in self.naapurit(next(reversed(self.matkat_alusta.keys()))):
+                if self.kartta[seur[1]][seur[0]] == "." and seur not in self.matkat_alusta:
+                    self.matkat_alusta[seur] = i
+                    i += 1
         
     
     def selvita_huijaukset(self):
