@@ -15,13 +15,13 @@ def siirtymä_nappaimeen(nappain_1: int, nappain_2: int, nappis: list) -> tuple[
 def sormen_liikkeet(nappain_1, nappain_2, nappis: list) -> str:
     dx, dy = siirtymä_nappaimeen(nappain_1, nappain_2, nappis)
     if dx < 0:
-        horiz = abs(dx) * "L"
+        horiz = abs(dx) * "<"
     else:
-        horiz = dx * "R"
+        horiz = dx * ">"
     if dy < 0:
-        vert = abs(dy) * "U"
+        vert = abs(dy) * "^"
     else:
-        vert = dy * "D"
+        vert = dy * "v"
     if nappis == numeronappis:
         if nappain_2 in [7, 4, 1]:
             return vert+horiz
@@ -51,10 +51,15 @@ def liikkeet_liikesarjaan(liikesarja: str) -> str:
         tekeilla += "A"
     return tekeilla
 
+def kaanna(sarja: str) -> str:
+    kaannetty = sarja.replace("U", "^").replace("D", "v").replace("L", "<").replace("R", ">")
+    print(kaannetty)
+    return kaannetty
+
 numerosarjat = lue("alku2.txt")
 
 numeronappis = [[7, 8, 9], [4, 5, 6], [1, 2, 3], ["X", 0, 99]]
-nuolinappis = [["X", "U", "A"], ["L", "D", "R"]]
+nuolinappis = [["X", "^", "A"], ["<", "v", ">"]]
 
 yhteensa = 0
 
