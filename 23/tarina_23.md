@@ -1,0 +1,17 @@
+# Back on track
+
+No niin. Alkaa tuntua jo hetkittäin vähän raskaalta tämä. Toissa lauantainahan etsittiin joulukuusimuodostelmaa liikkuvista roboteista ja siihen katkesi raportointi. Sunnuntaina sen jälkeen sekaisin mennyt robotti työnsi Sokoban-henkisesti kahdenkokoisia laatikoita ja se meni niin helposti, etten viitsinyt edes raportoida.
+
+Maanantaina olin jo niin vireessä, että aamulla heräillessä mietin, että milloinkohan tulee reitinhakutehtäviä, milloin pääsee ohjelmoimaan luokkia ja oliota. No, reitinhakua tuli kun tehtävässä oli poroja, jotka juoksivat haarautuvaa polkua. ensin piti selvittää nopein maaliintuloaika, sitten kaikki kohdat useampien vaihtoehtoisten nopeimpien reittien varrella. Siinä oli kummilapsen muskarin joululeikkikonserttia ja kyläilyä enkä illalla enää ehtinyt ratkaista kakkososaa, niin jäi roikkumaan.
+
+Tiistaina töihin ja argh: omituisella omalla konekielellään toimiva tietokone, jonka toimintaa ymmärtääkseen piti opetella laskutoimituksia binääriluvuilla, itselleni vieraimpana bitwise XOR. Puoleenväliin jäi, liian myöhään nukkumaan ja vähän väsyneempänä keskiviikkona töihin. Silloin oli sentään vielä helppo tehtävä: juoksemista avoimen kentän kulmasta toiseen, kentälle tippuu määrätyssä järjestyksessä eri paikkoihin kiviä ja kakkososassa piti selvittää, monesko kivi katkaisee viimeisenkin mahdollisen reitin.
+
+Torstaina olin jo niin väsynyt ja jumissa, että raidallisten pyyhkeiden lajittelua ei kunnolla jaksanut edes aloittaa. Perjantaina oltiin taas kilparadalla ja alkuun sai tehdä yhden pikku oikaisun ja tokassa osiossa yhden hyvin suuren, ja piti tutkia taas nopeimmat reitit alusta maaliin. Meni helposti.
+
+Lauantaina melko helvetillinen tehtävä, jossa painetaan nappeja, jolla ohjataan robottia, joka painaa toisen robotin nappeja, ja se ohjaa kolmatta robottia, ja se pitäisi saada painamaan haluttuja nappeja. En ihan täysin vieläkään ymmärrä, miksi samojen nappien painaminen eri järjestyksessä vaatii ketjun yläpäässä enemmän tai vähemmän napinpainalluksia. Kakkososassa toistensa nappeja painelevien robottien ketju on 25 peltiheikkiä pitkä; pitäisi ihan oikeasti ymmärtää miten se homma toimii että sen voisi toteuttaa järkevästi, mutta odottakoon.
+
+Eilisessä tehtävässä oli apinoita pörssissä, ja niiden tarjoamat hinnat vaihtelivat ennaltamäärätyn kaavan mukaan. Binääriluvuilla kikkailua taas, mutta koko päivä meni lauantain robotteja ihmetellessä. Sentään sain illalla aika myöhään robottitehtävän ykkösosan ratkaistua, ja olin pitkästä aikaa ihan tyytyväinen itseeni.
+
+Tämän päivän tehtävä vaikutti aika kivalta ja niin se olikin: tietokoneita, joiden kahdenvälisiä yhteyksiä on listattu. Siitä piti sit katsoa, että löytyisikö kolmea keskenään yhteydessä olevaa tietokonetta ja kuinka suuri on suurin mahdollinen ristikkäin kaikkiin toisiinsa yhteydessä olevien tietokoneiden verkko. Keksin omasta mielestäni ihan fiksusti käyttää joukkoja ja niiden leikkauksia. Python tietorakenteiden takia sai vähän kikkailla. Joukot (set) eivät nimittäin voi sisältää joukkoja, joten joukot piti säilöä monikkoina (tuple), mutta niistä pitäisi jotenkin saada karsittua samojen koneiden erijärjestyksiset joukot pois. No, ratkesi ja hyvä niin ja vastaus oli aika fiksu ja elegantti vaikka itse sanonkin.
+
+Jos vielä niitä apinoita katselisi, tsägällä sekin tässä tänään ratkeaa. Kestävyys on koitoksella mutta ei maratoninkaan juokseminen ole loppua kohden kivaa. Eikä tässä enää juurikaan ole kyse koodaustehtävien ratkaisemisesta.
