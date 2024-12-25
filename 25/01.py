@@ -2,13 +2,16 @@ import itertools
 
 def lue(tiedosto: str) -> tuple[list, list]:
     with open(tiedosto) as f:
+        koko = -1
         avaimet = []
         lukot = []
         moykky = []
         for r in f:
-            if r != "\n":
+            if r == "\n" and koko == -1:
+                koko = len(moykky)
+            if len(moykky) != koko and r != "\n":
                 moykky.append([merkki for merkki in r.strip()])
-            else:
+            if len(moykky) == koko:
                 palkit = []
                 for x in range(len(moykky[0])):
                     palkit.append([moykky[y][x] for y in range(len(moykky))])
