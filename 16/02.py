@@ -85,7 +85,7 @@ mahdolliset = [(alku, "E", 0, (-1, -1), "E")]
 kaydyt = set()
 maaliin_paasty = False
 
-while True:
+while not maaliin_paasty:
     hyodyllinen = False
     seuraavat_mahdolliset = []
     tutkittava = mahdolliset[0]

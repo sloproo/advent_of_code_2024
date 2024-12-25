@@ -11,8 +11,6 @@ class Kartta:
                 self.kartta.append([m for m in r.strip()])
         self.kasittele_kartta()
         self.tila = Tila(self.alku, "E", 0, [])
-
-    
         
     def kasittele_kartta(self):
         for y in range(len(self.kartta)):
@@ -24,7 +22,7 @@ class Kartta:
                     elif self.kartta[y][x] == "S":
                         self.alku = (x, y)
                         self.kartta[y][x] = "."
-    
+   
     def etsi_reitti(self):
         pass
 
@@ -37,7 +35,7 @@ class Kartta:
             return False
         return True
 
-
+    
     
 class Tila:
     def __init__(self, koord: tuple[int, int], suunta: str, askeleita: int,
