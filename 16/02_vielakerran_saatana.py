@@ -1,4 +1,7 @@
 from typing import Self
+import time
+
+alkuaika = time.time()
 
 def lue(tiedosto: str) -> tuple:
     kartta = []
@@ -75,7 +78,11 @@ class Tila:
                 return True
         return False
     
-    
+    def backtrackaa(self, alku: tuple[int, int]) -> list:
+        if self.paikka != alku:
+            return {self.paikka}.union(self.edeltava.backtrackaa(alku))
+        else:
+            return {self.paikka}
 
 kartta, alku, maali = (lue("input.txt"))
 jonossa = [Tila(alku, "E", 0, None, kartta)]
@@ -113,11 +120,12 @@ while not maalissa:
                 break
         if kelvollinen:
             jonossa.append(tuore)
-    print(jonossa[0].askeleita)
-    print(f"Vanhat: {len(vanhat)}\nJonossa: {len(jonossa)}")
-    print(f"")
 
 pass
+voittoreitit = []
 for vanha in vanhat:
     if vanha.paikka == maali:
-        print(vanha)
+        print(vanha.backtrackaa(alku))
+        voittoreitit.append(vanha.backtrackaa(alku))
+print(f"Voittoreittien varrella on {len(voittoreitit[0].union(*voittoreitit[1:]))} ruutua")
+print(f"Aikaa kului {time.time() - alkuaika} sekuntia.")
