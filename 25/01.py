@@ -43,10 +43,3 @@ for lukko, avain in itertools.product(lukot, avaimet):
         kaypia_yhdistelmia += 1
 
 print(f"Käypiä lukko-avain-yhdistelmiä on {kaypia_yhdistelmia}")
-
-    
-
-
-
-                
-
