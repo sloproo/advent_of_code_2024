@@ -1,22 +1,39 @@
-def lue(tiedosto: str) -> tuple[list, list]:
-    with open(tiedosto) as f:
-        pyyhkeet = f.readline().strip().split(", ")
-        f.readline()
-        asetelmat = [r.strip() for r in f]
-    return pyyhkeet, asetelmat
+class Kylpyla:
+    def __init__(self, tiedosto: str):
+            with open(tiedosto) as f:
+                self.pyyhkeet = f.readline().strip().split(", ")
+                f.readline()
+                self.asetelmat = [r.strip() for r in f]
+            self.ratkaistut = {}
+    
+    def sopiiko(self, pyyhe: str, takana: str, haluttu: str) -> bool:
+        return takana+pyyhe == haluttu[:len(takana+pyyhe)]
+    
+    def edista(self, haluttu: str, takana: str, osumia: int) -> int:
+        for pyyhe in self.pyyhkeet:
+            if self.sopiiko(pyyhe, takana, haluttu):
+                if takana+pyyhe in self.ratkaistut:
+                    osumia += self.ratkaistut[takana+pyyhe]
+                elif takana + pyyhe == haluttu:
+                    osumia += 1
+                else:
+                    osumia += self.edista(haluttu, takana+pyyhe, osumia)
+        self.ratkaistut[takana] = osumia
+        return osumia
+    
+    def ratkaise_kaikki(self):
+        ratkeavia = 0
+        for haluttu in self.asetelmat:
+            self.ratkaistut = {}
+            osumia = self.edista(haluttu, "", 0)
+            if osumia > 0:
+                ratkeavia += 1
+            print(f"{haluttu}: {osumia}")
+        print(f"Yhteensä ratkenneita oli {ratkeavia}")
 
-def syvenny(asetelma: str, pyyhkeet: list, loytyneita: int) -> int:
-    lyhyempi = min(len(asetelma), pyyhkeet[0])
-    for raitoja in range(lyhyempi, 0, -1):
-        for pyyhe in [p for p in pyyhkeet if len(pyyhe) == raitoja]:
-            if asetelma[:raitoja] == pyyhe:
-                loytyneita += syvenny(asetelma[raitoja:], pyyhkeet, loytyneita)
-    return loytyneita
+onsen = Kylpyla("input.txt")
 
-pyyhkeet, asetelmat = lue("alku.txt")
+onsen.ratkaise_kaikki()
+
 pass
-pyyhkeet_lajiteltu = sorted(pyyhkeet, key= lambda x: len(x), reverse= True)
-
-for asetelma in asetelmat:
-    print(syvenny)
-
+# 272 on liian matala

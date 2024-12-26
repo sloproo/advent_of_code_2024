@@ -19,11 +19,9 @@ def lue(tiedosto: str) -> tuple:
                     kartta[y][x] = "."
     return (kartta, alku, maali)
 
-
 class Tila:
     def __init__(self, paikka: tuple[int, int], suunta: str, askeleita: int,
                 edeltava: Self, kartta: list):
-                #  edeltava: Self, kartta: list =kartta):
         self.paikka = paikka
         self.suunta = suunta
         self.askeleita = askeleita
