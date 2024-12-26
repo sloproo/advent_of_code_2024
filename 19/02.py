@@ -26,14 +26,13 @@ class Kylpyla:
         for haluttu in self.asetelmat:
             self.ratkaistut = {}
             osumia = self.edista(haluttu, "", 0)
-            if osumia > 0:
-                ratkeavia += 1
+            ratkeavia += osumia
             print(f"{haluttu}: {osumia}")
-        print(f"Yhteensä ratkenneita oli {ratkeavia}")
+        print(f"Yhteensä mahdollisia yhdistelmiä oli {ratkeavia}")
 
-onsen = Kylpyla("input.txt")
+onsen = Kylpyla("alku.txt")
 
 onsen.ratkaise_kaikki()
 
 pass
-# 272 on liian matala
+# 84312021729571328389 on liian korkea
