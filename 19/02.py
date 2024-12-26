@@ -9,15 +9,18 @@ class Kylpyla:
     def sopiiko(self, pyyhe: str, takana: str, haluttu: str) -> bool:
         return takana+pyyhe == haluttu[:len(takana+pyyhe)]
     
-    def edista(self, haluttu: str, takana: str, osumia: int) -> int:
+    def edista(self, haluttu: str, takana: str) -> int:
+        osumia = 0
         for pyyhe in self.pyyhkeet:
             if self.sopiiko(pyyhe, takana, haluttu):
                 if takana+pyyhe in self.ratkaistut:
                     osumia += self.ratkaistut[takana+pyyhe]
                 elif takana + pyyhe == haluttu:
                     osumia += 1
+                elif len(takana + pyyhe) >= len(haluttu) and takana + pyyhe != haluttu:
+                    osumia += 0
                 else:
-                    osumia += self.edista(haluttu, takana+pyyhe, osumia)
+                    osumia += self.edista(haluttu, takana+pyyhe)
         self.ratkaistut[takana] = osumia
         return osumia
     
@@ -25,14 +28,16 @@ class Kylpyla:
         ratkeavia = 0
         for haluttu in self.asetelmat:
             self.ratkaistut = {}
-            osumia = self.edista(haluttu, "", 0)
+            osumia = self.edista(haluttu, "")
             ratkeavia += osumia
-            print(f"{haluttu}: {osumia}")
+            # print(f"{haluttu}: {osumia}")
+            # print(f"Toisaalta haluttu.ratkaistut[\"\"] oli {self.ratkaistut['']}")
         print(f"Yhteensä mahdollisia yhdistelmiä oli {ratkeavia}")
 
-onsen = Kylpyla("alku.txt")
+onsen = Kylpyla("input.txt")
 
 onsen.ratkaise_kaikki()
 
 pass
 # 84312021729571328389 on liian korkea
+# 712058625427487
