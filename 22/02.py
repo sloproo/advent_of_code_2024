@@ -34,10 +34,10 @@ for luku in apinoiden_alkuluvut:
             sarjalla_rahaa[sarja] = apinan_sarjat[sarja]
         else:
             sarjalla_rahaa[sarja] += apinan_sarjat[sarja]
-        i += 1
-        if i % 200 == 0:
-            print(f"Se oli apina nro {i}")
-            print(f"Aikaa kulunut {time.time() - alkuaika} sekuntia")
+    i += 1
+    if i % 200 == 0:
+        print(f"Se oli apina nro {i}")
+        print(f"Aikaa kulunut {time.time() - alkuaika} sekuntia")
 
 print(f"Apinojen hinnankehitykset ja sarjoilla saatavat rahat laskettu")
 print(f"Aikaa kului {time.time() - alkuaika}")
