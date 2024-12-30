@@ -1,4 +1,3 @@
-import itertools
 import time
 
 alkuaika = time.time()
@@ -15,57 +14,30 @@ def kierros(luku: int) -> int:
     b = (a // 32 ^ a) % pitka
     c = (b * 2048 ^ b) % pitka
     return c
-
-def sopiiko_muutos(hinnat: list, muutokset: list) -> int:
-    for i in range(4):
-        if hinnat[-4+i] - hinnat[-5+i] != muutokset[i]:
-            return -999
-    else:
-        return hinnat[-1]
     
-hinnat = []
-hinnan_muutokset = []
-kaikki_jaksot = set()
+sarjalla_rahaa = {}
 
 for luku in apinoiden_alkuluvut:
-    tyohinnat = []
-    tyomuutokset = []
-    nollahinta = luku % 10
+    apinan_sarjat = {}
+    apinan_hinnat = [luku % 10]
     for i in range(2000):
         luku = kierros(luku)
-        tyohinnat.append(luku % 10)
-        if i == 0:
-            tyomuutokset.append(tyohinnat[-1] - nollahinta)
-        else:
-            tyomuutokset.append(tyohinnat[-1] - tyohinnat[-2])
+        apinan_hinnat.append((luku % 10, luku % 10 - apinan_hinnat[-1]))
+        
         if i >= 3:
-            kaikki_jaksot.add(tuple(tyomuutokset[-4:]))
-    hinnat.append(tyohinnat)
-    hinnan_muutokset.append(tyomuutokset)
+            sarja = (tuple([apinan_hinnat[x][1] for x in range(-4, 0)])
+            if sarja not in apinan_sarjat:
+                apinan_sarjat[sarja] = apinan_hinnat[-1][0]
+    for sarja in apinan_sarjat:
+        if sarja not in sarjalla_rahaa:
+            sarjalla_rahaa[sarja] = apinan_sarjat[sarja]
+        else:
+            sarjalla_rahaa[sarja] += apinan_sarjat[sarja]
 
-print(len(kaikki_jaksot))
+print(f"Apinojen hinnankehitykset ja sarjoilla saatavat rahat laskettu")
 print(f"Aikaa kului {time.time() - alkuaika}")
 
-
-paras_saalis = 0
-laskuri = 0
-
-for jakso in kaikki_jaksot:
-    jakson_saalis = 0
-    for apina_nro in range(len(hinnat)):
-        jakso_str = "".join([str(x) for x in jakso])
-        muutokset_str = "".join([str(x) for x in hinnan_muutokset[apina_nro]])
-        if jakso_str in muutokset_str:
-            jakso_list = list(jakso)
-            for i in range(len(hinnan_muutokset[apina_nro]) - 4):
-                if jakso_list == hinnan_muutokset[apina_nro][i:i+4]:
-                    jakson_saalis += hinnat[apina_nro][i+3]
-                    break
-    paras_saalis = max(paras_saalis, jakson_saalis)
-    laskuri += 1
-    print(laskuri)
-
-print(paras_saalis)
+print(f"Paras saalis on {max(sarjalla_rahaa.values())}
 print(f"Aikaa kului {time.time() - alkuaika}")
 
 pass
