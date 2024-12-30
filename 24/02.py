@@ -58,7 +58,7 @@ class Portisto:
         for i in range(self.suurin + 1):
             sana += str(int(self.lyh(kirjain, i)))
         if kirjain == "z":
-            sana += str(int(self.lyh(kirjain, 45)))
+            sana += str(int(self.lyh(kirjain, self.suurin + 1)))
         return f"{sana[::-1]}"
 
     def tarkasta_tilanne(self):
@@ -76,13 +76,13 @@ class Portisto:
 
         if x_intina + y_intina != z_intina:
             print(f"Väärin meni:")
-            print(f"{x_bin_strna.zfill(46)}")
-            print(f"{y_bin_strna.zfill(46)}")
-            print(f"{o_bin_strna.zfill(46)}    <- Oikein")
-            print(f"{z_bin_strna.zfill(46)}    <- Koneen antama")
+            print(f"{x_bin_strna.zfill(self.suurin + 2)}")
+            print(f"{y_bin_strna.zfill(self.suurin + 2)}")
+            print(f"{o_bin_strna.zfill(self.suurin + 2)}    <- Oikein")
+            print(f"{z_bin_strna.zfill(self.suurin + 2)}    <- Koneen antama")
             for i in range(len(o_bin_strna)):
                 if z_bin_strna[i] != o_bin_strna[i]:
-                    print(f"Virheellinen indeksi on {45 - i}")
+                    print(f"Virheellinen indeksi on {self.suurin + 1 - i}")
             print()
             
             
@@ -125,10 +125,13 @@ class Portisto:
         pass
                 
 
-po = Portisto("input.txt")
+po = Portisto("input2.txt")
 po.etsi_vialliset()
 
 pass
 
 
 
+# chv,jpj,kgj,rts,vvw,z07,z12,z26
+# Puolimanuaalisesti haettu enkä kadu mitään
+# ... vielä ainakaan.
