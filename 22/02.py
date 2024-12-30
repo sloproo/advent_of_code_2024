@@ -6,7 +6,7 @@ def lue(tiedosto :str) -> list:
     with open(tiedosto) as f:
         return [int(r) for r in f.readlines()]
 
-apinoiden_alkuluvut = lue("alku2.txt")
+apinoiden_alkuluvut = lue("input.txt")
 
 def kierros(luku: int) -> int:
     pitka = 16777216
@@ -16,7 +16,7 @@ def kierros(luku: int) -> int:
     return c
 
 sarjalla_rahaa = {}
-i = 0
+apinan_nro = 0
 
 for luku in apinoiden_alkuluvut:
     apinan_sarjat = {}
@@ -34,13 +34,10 @@ for luku in apinoiden_alkuluvut:
             sarjalla_rahaa[sarja] = apinan_sarjat[sarja]
         else:
             sarjalla_rahaa[sarja] += apinan_sarjat[sarja]
-    i += 1
-    if i % 200 == 0:
-        print(f"Se oli apina nro {i}")
-        print(f"Aikaa kulunut {time.time() - alkuaika} sekuntia")
-
-print(f"Apinojen hinnankehitykset ja sarjoilla saatavat rahat laskettu")
-print(f"Aikaa kului {time.time() - alkuaika}")
+    # apinan_nro += 1
+    # if apinan_nro % 200 == 0:
+    #     print(f"Se oli apina nro {apinan_nro}")
+    #     print(f"Aikaa kulunut {time.time() - alkuaika} sekuntia")
 
 print(f"Paras saalis on {max(sarjalla_rahaa.values())}")
 print(f"Aikaa kului {time.time() - alkuaika}")
