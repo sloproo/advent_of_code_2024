@@ -77,15 +77,15 @@ class Portisto:
         if x_intina + y_intina != z_intina:
             print(f"Väärin meni:")
             print(f"{x_bin_strna.zfill(46)}")
-            print(f"{y_bin_strna.zfill(46)}\n")
-            print(f"{z_bin_strna.zfill(46)}\n" + 
-            f"{o_bin_strna.zfill(46)}")
+            print(f"{y_bin_strna.zfill(46)}")
+            print(f"{o_bin_strna.zfill(46)}    <- Oikein")
+            print(f"{z_bin_strna.zfill(46)}    <- Koneen antama")
             for i in range(len(o_bin_strna)):
                 if z_bin_strna[i] != o_bin_strna[i]:
-                    print("*", end="")
-                else:
-                    print(" ", end="")
+                    print(f"Virheellinen indeksi on {45 - i}")
             print()
+            
+            
             
         # else:
             # print(f"Oikein meni:\n{x_bin_strna.zfill(46)}\n{y_bin_strna.zfill(46)}\n{z_bin_strna.zfill(46)}\n" + 
@@ -99,10 +99,28 @@ class Portisto:
 
     def etsi_vialliset(self):
         for i in range(self.suurin + 1):
+            print(f"\nMennään indeksissä {i}")
+            print(f"Eka x{i:02} = True")
             self.nollaa_portit()
             self.portit[f"x{i:02}"] = True
             self.laske_laskut()
             self.tarkasta_tilanne()
+            
+            self.nollaa_portit()
+            self.portit[f"y{i:02}"] = True
+            print(f"Sitten y{i:02} = True")
+            self.laske_laskut()
+            self.tarkasta_tilanne()
+            
+            self.nollaa_portit()
+            print(f"Siten x{i:02} = True ja y{i:02} = True")
+            self.portit[f"x{i:02}"] = True
+            self.portit[f"y{i:02}"] = True
+            self.laske_laskut()
+            self.tarkasta_tilanne()
+            
+            
+
             pass
         pass
                 
