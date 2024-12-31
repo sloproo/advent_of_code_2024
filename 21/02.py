@@ -12,9 +12,23 @@ class Avaruusasema:
             ">": {"A": "^A", "<": "<<A", "v": "<A", ">": "A"}
         }
 
-        
-    def sarja_seuraavalle_tasolle(self, alempi: str) -> str:
+"""
+Todo:
+Seuraavalle tasolle-funktio joka yksinkertaisesti korvaa alemman tason sarja-
+merkkijonosta kaiken sillä, mitä self.liikkeet sanoo. "A":sta aina lähdetään ja
+liikkeet self.liikkeetin mukaan.
 
+Siinä käyttöön 
+
+Tässä käyttöön 
+itertools.product: self.likkeet["^"][">"], self.liikkeet[jotain][muuta] in
+itertools.product([ekan, vaihtoehdot], [tokan_vaihtoehdot], jne) ja ajaa siinä
+for-loopissa sarjaa_seuraavalle tasolle vaikka 5 kertaa ja käskee sitä seuraamaan
+ja tallentamaan aina, kun vaihtoehtojen yhdistelmällä saa kaikkein pienimmän painallusmäärän.
+
+"""
+    def sarja_seuraavalle_tasolle(self, alempi: str) -> str:
+        for vaihtoehdot 
     
     def ratkaise(self):
         kompleksisuudet = 0
