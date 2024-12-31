@@ -1,28 +1,21 @@
-"""
-Elikkäs.
-Ehkä tämän voi tehdä yksinkertaisesti kun tietää mitä tekee.
-funktio sille, että muuttaa näppäimenpainallukset ylemmän tason
-näppäimenpainalluksiksi. Niistä vaihtoehtoiset versiot, putsausfunktio on jo.
-Kattoo niitten pituudet iteroiden ainakin sen ykköstehtävässä vaaditun kaksi
-tasoa ylöspäin ja siinähän se sitten onkin.
-
-Myöhempää varten voi katsoa vaikka just sen kaksi tasoa ylöspäin erilaisille kolmen
-napinpainalluksen yhdistelmällä (10 ^3 ei kai ole paha emt?), jossa erot tulevat
-näkyviin ja siitä ylöspäin varmaan kertaututuvat. Niillä sit pelaa, jos syvyyttä tulee
-kovasti lisää.
-"""
-
-
 import itertools
 
 class Avaruusasema:
     def __init__(self, tiedosto: str):
         with open(tiedosto) as f:
             self.alkusarjat = [r.strip() for r in f.readlines()]
-        self.numeronappis = [["7", "8", "9"], ["4", "5", "6"], ["1", "2", "3"],
-                             ["X", "0", "A"]]
-        self.nuolinappis = [["X", "^", "A"], ["<", "v", ">"]]
+        self.liikkeet = {
+            "^": {"A": ">A", "<": "v<A", "v": "vA", "^": "A"},
+            "A": {"^": "<A", ">": "vA", "A": "A"},
+            "<": {"^": ">^A", "v": ">A", ">": ">>A", "<": "A"},
+            "v": {"^": "^A", "<": "<A", ">": ">A", "v": "A"},
+            ">": {"A": "^A", "<": "<<A", "v": "<A", ">": "A"}
+        }
+
         
+    def sarja_seuraavalle_tasolle(self, alempi: str) -> str:
+
+    
     def ratkaise(self):
         kompleksisuudet = 0
         
