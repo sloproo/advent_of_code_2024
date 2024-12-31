@@ -30,6 +30,14 @@ class Tietokone:
         print(f"Sit löytyi. Kasvava = {self.kasvava - 1}")
         print(f"Kesti {time.time() - alkuaika}")
     
+
+    '''
+    Tätä alla olevaa on muokkailtu kesken tekemisen. Siitä oli sellainen versio,
+    jonne manuaalisesti naputellaan sarjaa ja etsitään alkupään numeroita kuntoon.
+    Sillä löytyi tuo 4532305133267 ja sen jälkeen sit muokkasin koodia niin, että
+    se brute forcettaa viimeiset kolme lukua.
+    '''
+    
     def testaa_manuaalisesti(self):
         voittavat = []
         for i in range(1000):
