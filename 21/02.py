@@ -23,6 +23,7 @@ class Avaruusasema:
                              ["X", "0", "A"]]
         self.nuolinappis = [["X", "^", "A"], ["<", "v", ">"]]
         
+    def ratkaise(self):
         kompleksisuudet = 0
         
         for sarja in self.alkusarjat:
