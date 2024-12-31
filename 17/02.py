@@ -14,33 +14,41 @@ class Tietokone:
                            4: self.nelja, 5: self.viisi, 6: self.kuusi, 7: self.seitseman}
             self.lukupaa = 0
             self.palaute = []
-            self.kasvava = 0
+            self.kasvava = 35184373000000 # Käyty luvut 443739658 - 1670000000 ja se tais mennä yli eli liian isosta aloitettiin
+            # Kokeillaan sit pienimmästä 10-numeroisesta oktaaliluvusta eli 134217728:stä ylöspäin
 
     def etsi_itsen_synnyttaja(self):
         while self.palaute != self.ohjelma:
             self.nollaa()
-            print(f"a = {self.a}")
             self.aja_ohjelma()
-            # if len(self.palaute) < len(self.ohjelma):
-            #     print(f"Vielä ollaan pienissä. a oli 8 ** {self.kasvava}")
-            #     print(f"{self.palaute} oli palaute")
-            #     print(f"{self.ohjelma} on se mihin pyritään")
-            #     self.kasvava += 1
-                
-        
-            # print(f"nyt aletaan lähestyä: \n{self.palaute} ei ole enää lyhyempi kuin ohjelma a:n arvolla\n" +
-            #         f"{self.ohjelma}\n {self.kasvava} oli kasvava")
-            # if self.kasvava % 100000 == 0:
-            print(f"Sillä ollaan palautteessa {self.palaute}")
+            if self.kasvava % 1000000 == 0:
+                print(f"Mennään numerossa {self.kasvava}")
+                print(self.palaute)
+                print(f"{self.ohjelma} \n")
             self.kasvava += 1
-            
-                # time.sleep(5)
-            # print(f"a:n arvolla {self.kasvava} palaute oli {self.palaute}")
-            # time.sleep(0.1)
-            # print(f"Kasvava on kasvanut lukuun {self.kasvava}")
-
+    
         print(f"Sit löytyi. Kasvava = {self.kasvava - 1}")
         print(f"Kesti {time.time() - alkuaika}")
+    
+    def testaa_manuaalisesti(self):
+        voittavat = []
+        for i in range(1000):
+            desimaalina = 0
+            self.nollaa()
+            syote = str(4532305133267) + f"{i:02d}"
+            print(f"Syöte on {syote}")
+            if "8" in syote or "9" in syote:
+                continue
+            for i in range(len(syote)):
+                desimaalina += int(syote[i]) * 8 ** (15 - i)
+            self.a = desimaalina
+            self.aja_ohjelma()
+            print(f"Saatiin:  {str(self.palaute): >65}")
+            print(f"Halutaan: {str(self.ohjelma): >65}")
+            if self.palaute == self.ohjelma:
+                voittavat.append(desimaalina)
+        print(f"Voittava luku oli 10-kantaisena {desimaalina}")
+        print(f"Voittavat: {sorted(voittavat)}")
 
     
     def nollaa(self):
@@ -49,9 +57,6 @@ class Tietokone:
         self.c = 0
         self.palaute = []
         self.lukupaa = 0
-
-    def ota_ohjelma(self, otettava: str):
-        self.ohjelma = [int(luku) for luku in otettava.split(",")]
 
     def aja_ohjelma(self):
         jatka = True
@@ -130,8 +135,8 @@ class Tietokone:
         print(kak)
         return kak
 
-tiedosto = "alku2.txt"
+tiedosto = "input.txt"
 kompu = Tietokone(tiedosto)
-kompu.etsi_itsen_synnyttaja()
-
+# kompu.etsi_itsen_synnyttaja()
+kompu.testaa_manuaalisesti()
 
