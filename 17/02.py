@@ -36,8 +36,26 @@ class Tietokone:
     jonne manuaalisesti naputellaan sarjaa ja etsitään alkupään numeroita kuntoon.
     Sillä löytyi tuo 4532305133267 ja sen jälkeen sit muokkasin koodia niin, että
     se brute forcettaa viimeiset kolme lukua.
-    '''
+
+    Siis se perusluuppi oli while self.palaute != self.ohjelma ja inputilla otettiin
+    while True. Alla ChatGPT:n tarjoama ohjelma moiseen DDDX
     
+        syote = input("Anna syöte: ")
+        if syote == "exit":
+            break
+        desimaalina = 0
+        self.nollaa()
+        if "8" in syote or "9" in syote:
+            print("Syötteessä ei saa olla numeroita 8 tai 9.")
+            continue
+        for i in range(len(syote)):
+            desimaalina += int(syote[i]) * 8 ** (15 - i)
+        self.a = desimaalina
+        self.aja_ohjelma()
+        print(f"Saatiin:  {str(self.palaute): >65}")
+        print(f"Halutaan: {str(self.ohjelma): >65}")
+    '''
+
     def testaa_manuaalisesti(self):
         voittavat = []
         for i in range(1000):
