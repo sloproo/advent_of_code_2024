@@ -12,6 +12,44 @@ class Avaruusasema:
             ">": {"A": "^A", "<": "<<A", "v": "<A", ">": "A"}
         }
 
+    def tasonnousu(self, painallukset: str) -> str:
+        palautettava = ""
+        for i in range(len(painallukset) - 1):
+            palautettava += self.liikkeet[painallukset[i]][painallukset[i+1]]
+        return palautettava
+    
+    def etsi_nopeimmat(self):
+        lyhin = None
+        for self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+            self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] in \
+            itertools.product([">vA", "v>A"], ["<v<A", "v<<A"], ["<vA", "v<A"],
+            [">^>A", ">>^A"], ["^>A", ">^A"], ["<^A", "^<A"]):
+            testiliikkeet = "^^>A><>v^>><<vv<vA"
+            myllatty = self.tasonnousu(self.tasonnousu(self.tasonnousu(self.tasonnousu( \
+                self.tasonnousu(testiliikkeet)))))
+            if lyhin == None:
+                lyhin = len(myllatty)
+            elif len(myllatty) < lyhin:
+                lyhin = len(myllatty)
+                n1, n2, n3, n4, n5, n6 = self.liikkeet["^"][">"], \
+                self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+                self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], \
+                self.liikkeet[">"]["^"]
+        
+        self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+        self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] \
+        = n1, n2, n3, n4, n5, n6
+
+    def nopein_numeronappis(self):
+        # Tämmösellä liikkeelle list(set(itertools.permutations("vv>", 3))) 
+
+ase = Avaruusasema("input.txt")
+ase.etsi_nopeimmat()
+pass
+
+
+
+
 """
 Todo:
 Seuraavalle tasolle-funktio joka yksinkertaisesti korvaa alemman tason sarja-
@@ -26,7 +64,7 @@ itertools.product([ekan, vaihtoehdot], [tokan_vaihtoehdot], jne) ja ajaa siinä
 for-loopissa sarjaa_seuraavalle tasolle vaikka 5 kertaa ja käskee sitä seuraamaan
 ja tallentamaan aina, kun vaihtoehtojen yhdistelmällä saa kaikkein pienimmän painallusmäärän.
 
-"""
+
     def sarja_seuraavalle_tasolle(self, alempi: str) -> str:
         for vaihtoehdot 
     
@@ -133,4 +171,4 @@ ja tallentamaan aina, kun vaihtoehtojen yhdistelmällä saa kaikkein pienimmän 
         else:
             raise AssertionError("Nyt ei ollut kunnon suuntaa. Lipsahtiko A?")
 
-ase = Avaruusasema("input.txt")
+"""
