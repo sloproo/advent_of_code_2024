@@ -16,6 +16,8 @@ class Avaruusasema:
         #     ">": {"A": "^A", "<": "<<A", "v": "<A", ">": "A"}
         # }
         self.liikkeet = {}
+        self.nappikset_liikkeiksi()
+        self.kerroksia = 26
 
     def delta(self, nappi_1: str, nappi_2: str) -> tuple:
         if nappi_1 in "^<v>" or nappi_2 in "^<v>":
@@ -32,7 +34,7 @@ class Avaruusasema:
                     koor_2 = (x, y)
         return (koor_2[0] - koor_1[0], koor_2[1] - koor_1[1])
     
-    def deltat_liikkeiksi(self):
+    def nappikset_liikkeiksi(self):
         for nappis in [self.numeronappis, self.nuolinappis]:
             napit = [nappi for rivi in nappis for nappi in rivi if nappi != "X"]
             for nappi_1 in napit:
@@ -40,52 +42,59 @@ class Avaruusasema:
                     self.liikkeet[nappi_1] = {}
                 for nappi_2 in napit:
                     delta = self.delta(nappi_1, nappi_2)
-                    nuolet = ""
-                    nuolet += "<" * abs(delta[0]) if delta[0] < 0 else ">" * delta[0]
-                    nuolet += "^" * abs(delta[1]) if delta[1] < 0 else "v" * delta[1]
-                    permutaatiot = ["".join(permutaatio) + "A" for permutaatio in \
-                                    set(itertools.permutations(nuolet))]
+                    vaaka = "<" * abs(delta[0]) if delta[0] < 0 else ">" * delta[0]
+                    pysty = "^" * abs(delta[1]) if delta[1] < 0 else "v" * delta[1]
+                    painallukset = self.varmista_painallukset(nappi_1, nappi_2,
+                                                              vaaka, pysty)
                     if nappi_2 not in self.liikkeet[nappi_1]:
-                        self.liikkeet[nappi_1][nappi_2] = permutaatiot
-                    else:
-                        self.liikkeet[nappi_1][nappi_2] += permutaatiot
-
+                        self.liikkeet[nappi_1][nappi_2] = painallukset
+                    # else:
+                    #     self.liikkeet[nappi_1][nappi_2] += painallukset
+        # self.liikkeet["A"]["A"].remove("A")
+        # for nappi_1 in self.liikkeet:
+        #     for nappi_2 in self.liikkeet[nappi_1]:
+        #         if len(self.liikkeet[nappi_1][nappi_2]) == 1:
+        #             self.liikkeet[nappi_1][nappi_2] = self.liikkeet[nappi_1][nappi_2][0]
+        # pass
+                    
+    def varmista_painallukset(self, nappi_1: str, nappi_2: str, vaaka: str,
+                              pysty: str) -> list:
+        if nappi_1 == "<" and nappi_2 in "^A":
+            return vaaka + pysty + "A"
+        elif nappi_1 in "^A" and nappi_2 == "<":
+            return pysty + vaaka + "A"
+        elif nappi_1 in "741" and nappi_2 in "0A":
+            return vaaka + pysty + "A"
+        elif nappi_1 in "0A" and nappi_2 in "741":
+            return pysty + vaaka + "A"
+        else:
+            if "<" in vaaka:
+                return vaaka + pysty + "A"
+            else:
+                return pysty + vaaka + "A"
 
     def tasonnousu(self, painallukset: str) -> str:
-        palautettava = ""
+        palautettava = self.liikkeet["A"][painallukset[0]]
         for i in range(len(painallukset) - 1):
             palautettava += self.liikkeet[painallukset[i]][painallukset[i+1]]
         return palautettava
     
-    def etsi_nopeimmat(self):
-        lyhin = None
-        for self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
-            self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] in \
-            itertools.product([">vA", "v>A"], ["<v<A", "v<<A"], ["<vA", "v<A"],
-            [">^>A", ">>^A"], ["^>A", ">^A"], ["<^A", "^<A"]):
-            testiliikkeet = "^^>A><>v^>><<vv<vA"
-            myllatty = self.tasonnousu(self.tasonnousu(self.tasonnousu(self.tasonnousu( \
-                self.tasonnousu(testiliikkeet)))))
-            if lyhin == None:
-                lyhin = len(myllatty)
-            elif len(myllatty) < lyhin:
-                lyhin = len(myllatty)
-                n1, n2, n3, n4, n5, n6 = self.liikkeet["^"][">"], \
-                self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
-                self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], \
-                self.liikkeet[">"]["^"]
-        
-        self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
-        self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] \
-        = n1, n2, n3, n4, n5, n6
+    def laske_kompleksisuus(self, sarja: str) -> int:
+        pohjasarja = sarja
+        for _ in range(self.kerroksia):
+            sarja = self.tasonnousu(sarja)
+        print(f"Kompleksisuus on {len(sarja)} * {int(pohjasarja[:-1])} = {(palautus := len(sarja) * int(pohjasarja[:-1]))}")
+        return palautus
 
-    def nopein_numeronappis(self):
-        # Tämmösellä liikkeelle list(set(itertools.permutations("vv>", 3))) 
-        pass
+    def ratkaise(self):
+        yhteensa = 0
+        for alkusarja in self.alkusarjat:
+            yhteensa += self.laske_kompleksisuus(alkusarja)
+        return yhteensa
+
 
 ase = Avaruusasema("input.txt")
-ase.deltat_liikkeiksi()
-# ase.etsi_nopeimmat()
+print(ase.ratkaise())
 pass
 
 
@@ -101,6 +110,38 @@ pass
 # itertools.product([ekan, vaihtoehdot], [tokan_vaihtoehdot], jne) ja ajaa siinä
 # for-loopissa sarjaa_seuraavalle tasolle vaikka 5 kertaa ja käskee sitä seuraamaan
 # ja tallentamaan aina, kun vaihtoehtojen yhdistelmällä saa kaikkein pienimmän painallusmäärän.
+    
+    # def etsi_nopeimmat(self):
+    #     lyhin = None
+    #     vaihtoehtoja_sisaltavat = []
+    #     for nappi_1 in self.liikkeet:
+    #         for nappi_2 in self.liikkeet[nappi_1]:
+    #             if len(self.liikkeet[nappi_1][nappi_2]) > 1:
+    #                 vaihtoehtoja_sisaltavat.append((nappi_1, nappi_2))
+    #     for i in range(len(vaihtoehtoja_sisaltavat)):
+    #         pass
+        
+            
+
+    #     for self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+    #         self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] in \
+    #         itertools.product([">vA", "v>A"], ["<v<A", "v<<A"], ["<vA", "v<A"],
+    #         [">^>A", ">>^A"], ["^>A", ">^A"], ["<^A", "^<A"]):
+    #         testiliikkeet = "^^>A><>v^>><<vv<vA"
+    #         myllatty = self.tasonnousu(self.tasonnousu(self.tasonnousu(self.tasonnousu( \
+    #             self.tasonnousu(testiliikkeet)))))
+    #         if lyhin == None:
+    #             lyhin = len(myllatty)
+    #         elif len(myllatty) < lyhin:
+    #             lyhin = len(myllatty)
+    #             n1, n2, n3, n4, n5, n6 = self.liikkeet["^"][">"], \
+    #             self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+    #             self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], \
+    #             self.liikkeet[">"]["^"]
+        
+    #     self.liikkeet["^"][">"], self.liikkeet["A"]["<"], self.liikkeet["A"]["v"], \
+    #     self.liikkeet["<"]["A"], self.liikkeet["v"]["A"], self.liikkeet[">"]["^"] \
+    #     = n1, n2, n3, n4, n5, n6
 
 
 #     def ratkaise(self):
