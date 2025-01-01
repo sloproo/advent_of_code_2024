@@ -1,129 +1,99 @@
-"""
-Elikkäs.
-Ehkä tämän voi tehdä yksinkertaisesti kun tietää mitä tekee.
-funktio sille, että muuttaa näppäimenpainallukset ylemmän tason
-näppäimenpainalluksiksi. Niistä vaihtoehtoiset versiot, putsausfunktio on jo.
-Kattoo niitten pituudet iteroiden ainakin sen ykköstehtävässä vaaditun kaksi
-tasoa ylöspäin ja siinähän se sitten onkin.
-
-Myöhempää varten voi katsoa vaikka just sen kaksi tasoa ylöspäin erilaisille kolmen
-napinpainalluksen yhdistelmällä (10 ^3 ei kai ole paha emt?), jossa erot tulevat
-näkyviin ja siitä ylöspäin varmaan kertaututuvat. Niillä sit pelaa, jos syvyyttä tulee
-kovasti lisää.
-"""
-
-
 import itertools
 
 class Avaruusasema:
     def __init__(self, tiedosto: str):
         with open(tiedosto) as f:
             self.alkusarjat = [r.strip() for r in f.readlines()]
+        
         self.numeronappis = [["7", "8", "9"], ["4", "5", "6"], ["1", "2", "3"],
-                             ["X", "0", "A"]]
+            ["X", "0", "A"]]
         self.nuolinappis = [["X", "^", "A"], ["<", "v", ">"]]
-        
-    def ratkaise(self):
-        kompleksisuudet = 0
-        
-        for sarja in self.alkusarjat:
-            tokat = self.sarja_ylemmiksi_painalluksiksi(sarja, self.numeronappis)
-            tokat = list(set(tokat))
-            kolmannet = []
-            for toka in tokat:
-                kolmannet += self.sarja_ylemmiksi_painalluksiksi(toka, self.nuolinappis)
-            kolmannet = list(set(kolmannet))
-            pass # Tsekataan tähän väliin kolmosia
-            lyhin = min(len(kol) for kol in kolmannet) 
-            kolmannet = [kolmas for kolmas in kolmannet if len(kolmas) == lyhin]
-            neljannet = []
-            for kolmas in kolmannet:
-                neljannet += self.sarja_ylemmiksi_painalluksiksi(kolmas, self.nuolinappis)
-            neljannet = list(set(neljannet))
-            # neljannet = [neljas for neljas in neljannet if len(neljas) == len(sorted(neljannet, key= len)[0])]
-            lyhin = min([len(nelonen) for nelonen in neljannet])
-            neljannet = [nel for nel in neljannet if len(nel) == lyhin]
-            print(f"Sarjan {sarja} kompleksisuus on {lyhin} * {int(sarja[:-1])} = " +
-            f"{lyhin * int(sarja[:-1])} ")
-            kompleksisuudet += lyhin * int(sarja[:-1])
-        print(f"Kompleksisuuksien summa = {kompleksisuudet}")        
+        self.liikkeet = {}
+        self.nappikset_liikkeiksi()
 
-    def napin_koordinaatti(self, nappi, nappaimisto: list) -> tuple[int, int]:
-        for y in range(len(nappaimisto)):
-            for x in range(len(nappaimisto[y])):
-                if nappaimisto[y][x] == nappi:
-                    return (x, y)
-        raise AssertionError("Ei löytynyt haettua nappia")
-    
-    def sarja_ylemmiksi_painalluksiksi(self, sarja: str, nappis: str) -> list:
-        delta = self.matka_deltaksi("A", sarja[0], nappis)
-        permutaatiot = self.delta_permutaatioiksi(delta)
-        permutaatioiden_jono = [self.putsaa_vaihtoehtolista(permutaatiot, "A", nappis)] +[["A"]]
-        for i in range(len(sarja) -1):
-            delta = self.matka_deltaksi(sarja[i], sarja[i+1], nappis)
-            permutaatiot = self.delta_permutaatioiksi(delta)
-            permutaatiot = self.putsaa_vaihtoehtolista(permutaatiot, sarja[i], nappis)
-            permutaatioiden_jono.append(permutaatiot)
-            permutaatioiden_jono.append(["A"])
-        yhdistelmat = list(itertools.product(*permutaatioiden_jono))
-        litistetyt = [''.join(yhdistelma) for yhdistelma in yhdistelmat]
-        return list(set(litistetyt))
-        
-    def litista_permutaatiot(self, permutaatiot: list) -> list:
-        eroteltuina = list(itertools.product(*permutaatiot))
-        litistettyna = [''.join(eroteltu) for eroteltu in eroteltuina]
-        return litistettyna
-
-    def sarja_deltoiksi(self, sarja: str, nappis: str) -> list:
-        sarja = "A" + sarja
-        deltat = []
-        for i in range(len(sarja) -1):
-            deltat.append(self.matka_deltaksi(sarja[i], sarja[i+1], nappis))
-        return deltat
-    
-    def matka_deltaksi(self, nappi1, nappi2, nappaimisto: list) -> tuple[int, int]:
-        x1, y1 = self.napin_koordinaatti(nappi1, nappaimisto)
-        x2, y2 = self.napin_koordinaatti(nappi2, nappaimisto)
-        return (x2 - x1, y2 - y1)
-
-    def delta_permutaatioiksi(self, delta: tuple[int, int]) -> list[str]:
-        yhteensa = ""
-        if delta[0] < 0:
-            yhteensa += abs(delta[0]) * "<"
+    def delta(self, nappi_1: str, nappi_2: str) -> tuple:
+        if nappi_1 in "^<v>" or nappi_2 in "^<v>":
+            nappis = self.nuolinappis
         else:
-            yhteensa += delta[0] * ">"
-        if delta[1] < 0:
-            yhteensa += abs(delta[1]) * "^"
-        else:
-            yhteensa += delta[1] * "v"
-        mahdolliset = list({"".join(per) for per in itertools.permutations(yhteensa)})
-        return mahdolliset
+            nappis = self.numeronappis
+        for y in range(len(nappis)):
+            for x in range(len(nappis[y])):
+                if nappis[y][x] == "X":
+                    continue
+                if nappis[y][x] == nappi_1:
+                    koor_1 = (x, y)
+                if nappis[y][x] == nappi_2:
+                    koor_2 = (x, y)
+        return (koor_2[0] - koor_1[0], koor_2[1] - koor_1[1])
     
-    def putsaa_vaihtoehtolista(self, vaihtoehtolista: list,
-                               lahtokohta: str, 
-                               nappaimisto: list) -> list:
-        palautettavat = []
-        for askelsarja in vaihtoehtolista:
-            olinpaikka = self.napin_koordinaatti(lahtokohta, nappaimisto)
-            for askel in askelsarja:
-                olinpaikka = self.koordinaatista_suuntaan(olinpaikka, askel)
-                if nappaimisto[olinpaikka[1]][olinpaikka[0]] == "X":
-                    break
+    def nappikset_liikkeiksi(self):
+        for nappis in [self.numeronappis, self.nuolinappis]:
+            napit = [nappi for rivi in nappis for nappi in rivi if nappi != "X"]
+            for nappi_1 in napit:
+                if nappi_1 not in self.liikkeet:
+                    self.liikkeet[nappi_1] = {}
+                for nappi_2 in napit:
+                    delta = self.delta(nappi_1, nappi_2)
+                    vaaka = "<" * abs(delta[0]) if delta[0] < 0 else ">" * delta[0]
+                    pysty = "^" * abs(delta[1]) if delta[1] < 0 else "v" * delta[1]
+                    painallukset = self.varmista_painallukset(nappi_1, nappi_2,
+                                                              vaaka, pysty)
+                    if nappi_2 not in self.liikkeet[nappi_1]:
+                        self.liikkeet[nappi_1][nappi_2] = painallukset
+
+    def varmista_painallukset(self, nappi_1: str, nappi_2: str, vaaka: str,
+                              pysty: str) -> list:
+        if nappi_1 == "<" and nappi_2 in "^A":
+            return "A" + vaaka + pysty + "A"
+        elif nappi_1 in "^A" and nappi_2 == "<":
+            return "A" + pysty + vaaka + "A"
+        elif nappi_1 in "741" and nappi_2 in "0A":
+            return "A" + vaaka + pysty + "A"
+        elif nappi_1 in "0A" and nappi_2 in "741":
+            return "A" + pysty + vaaka + "A"
+        else:
+            if "<" in vaaka:
+                return "A" + vaaka + pysty + "A"
             else:
-                palautettavat.append(askelsarja)
-        return palautettavat
+                return "A" + pysty + vaaka + "A"
 
-    def koordinaatista_suuntaan(self, koord: tuple[int, int], suunta: str) -> \
-    tuple[int, int]:
-        if suunta == "^":
-            return (koord[0], koord[1] - 1)
-        elif suunta == ">":
-            return (koord[0] + 1, koord[1])
-        elif suunta == "v":
-            return (koord[0], koord[1] + 1)
-        elif suunta =="<":
-            return (koord[0] - 1, koord[1])
-        else:
-            raise AssertionError("Nyt ei ollut kunnon suuntaa. Lipsahtiko A?")
+    def tasonnousu(self,siirtymat: dict) -> dict:
+        uudet_siirtymat = {}
+        for siirtyma in siirtymat:
+            for i in range(len(siirtyma) -1):
+                if (self.liikkeet[siirtyma[i]][siirtyma[i+1]]) in uudet_siirtymat:
+                    uudet_siirtymat[self.liikkeet[siirtyma[i]][siirtyma[i+1]]] += \
+                    1 * siirtymat[siirtyma]
+                else:
+                    uudet_siirtymat[self.liikkeet[siirtyma[i]][siirtyma[i+1]]] = \
+                    1 * siirtymat[siirtyma]
+        return uudet_siirtymat
+    
+    def laske_kompleksisuus(self, pohjasarja: str) -> int:
+        sarja = "A" + pohjasarja
+        siirtymat = {}
+        for i in range(len(sarja) - 1):
+            if (self.liikkeet[sarja[i]][sarja[i+1]]) in siirtymat:
+                siirtymat[self.liikkeet[sarja[i]][sarja[i+1]]] += 1
+            else:
+                siirtymat[self.liikkeet[sarja[i]][sarja[i+1]]] = 1
+        for _ in range(self.robotteja):
+            siirtymat = self.tasonnousu(siirtymat)
+
+        pituudet = 0
+        for siirtyma in siirtymat:
+            pituudet += siirtymat[siirtyma] * (len(siirtyma) - 1)
+        print(f"Kompleksisuus on {pituudet} * {int(pohjasarja[:-1])} = {(palautus := pituudet * int(pohjasarja[:-1]))}")
+        return palautus
+
+    def ratkaise(self):
+        yhteensa = 0
+        for alkusarja in self.alkusarjat:
+            yhteensa += self.laske_kompleksisuus(alkusarja)
+        return yhteensa
+
 
 ase = Avaruusasema("input.txt")
+ase.robotteja = 25
+print(ase.ratkaise())
+pass
